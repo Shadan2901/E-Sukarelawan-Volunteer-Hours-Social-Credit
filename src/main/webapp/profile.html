@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Profile | E-Sukarelawan</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=24">
+</head>
+<body data-page="profile">
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar"></aside>
+    <main class="workspace">
+      <header class="topbar" id="topbar"></header>
+
+      <section class="page-heading split-heading profile-heading">
+        <div>
+          <h1>Profile studio</h1>
+          <p>Manage your volunteer identity in a movie-style profile format.</p>
+        </div>
+        <a class="btn secondary" href="dashboard.html">Back to dashboard</a>
+      </section>
+
+      <section class="profile-grid movie-profile-grid">
+        <article class="panel profile-card movie-profile-card">
+          <div class="profile-cover">
+            <div class="profile-cover-shine"></div>
+          </div>
+          <div class="profile-card-body movie-profile-body">
+            <div class="profile-photo movie-poster" id="profilePhotoPreview"></div>
+            <div class="movie-profile-copy">
+              <span class="movie-label">Volunteer profile</span>
+              <h2 id="profileDisplayName">Profile</h2>
+              <p id="profileDisplayMeta">Student</p>
+              <div class="profile-metadata">
+                <span><b>Student ID</b><strong id="profileMetaId">-</strong></span>
+                <span><b>University</b><strong id="profileMetaUniversity">-</strong></span>
+                <span><b>Role</b><strong id="profileMetaRole">-</strong></span>
+              </div>
+            </div>
+            <div class="profile-summary">
+              <div><small>Runtime</small><strong id="profileSummaryHours">0</strong><span>Verified hours</span></div>
+              <div><small>Rating</small><strong id="profileSummaryRank">-</strong><span>Student rank</span></div>
+            </div>
+            <div class="profile-story">
+              <strong>Synopsis</strong>
+              <p id="profileSynopsis">Add your volunteer profile summary.</p>
+            </div>
+          </div>
+        </article>
+
+        <form class="panel profile-form movie-profile-form" id="profileForm">
+          <div class="panel-head">
+            <div>
+              <h2>Edit profile details</h2>
+              <p>Update the information shown on your profile poster.</p>
+            </div>
+          </div>
+
+          <div class="panel-body form-grid">
+            <label class="field wide">Profile picture
+              <input id="profilePhotoInput" type="file" accept="image/*">
+            </label>
+            <label class="field wide">Full name
+              <input id="profileName" required>
+            </label>
+            <label class="field">Student / Staff ID
+              <input id="profileReferenceId" required>
+            </label>
+            <label class="field">Email
+              <input id="profileEmail" type="email" required>
+            </label>
+            <label class="field">Phone
+              <input id="profilePhone" type="tel" placeholder="+60">
+            </label>
+            <label class="field">Faculty
+              <input id="profileFaculty" placeholder="Faculty / department">
+            </label>
+            <label class="field wide">Programme
+              <input id="profileProgramme" placeholder="Course, programme, or club">
+            </label>
+            <label class="field wide">About me
+              <textarea id="profileBio" placeholder="Short volunteer profile"></textarea>
+            </label>
+            <div class="form-actions profile-actions">
+              <button class="btn primary" type="submit">Save profile</button>
+              <button class="btn secondary" id="removeProfilePhotoBtn" type="button">Remove picture</button>
+            </div>
+          </div>
+        </form>
+      </section>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status"></div>
+  <script src="app.js?v=24"></script>
+</body>
+</html>

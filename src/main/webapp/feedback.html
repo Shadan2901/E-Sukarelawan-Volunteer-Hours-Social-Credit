@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Feedback | E-Sukarelawan</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=24">
+</head>
+<body data-page="feedback">
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar"></aside>
+    <main class="workspace">
+      <header class="topbar" id="topbar"></header>
+
+      <section class="page-heading split-heading">
+        <div>
+          <span class="section-tag">Feedback</span>
+          <h1>Feedback desk</h1>
+          <p>Send feedback to the admin team and track replies in one place.</p>
+        </div>
+        <a class="btn secondary" href="dashboard.html">Back to dashboard</a>
+      </section>
+
+      <section class="feedback-metrics">
+        <article class="metric">
+          <div class="metric-icon">FB</div>
+          <div><span>Total feedback</span><strong id="feedbackTotal">0</strong><small>Visible records</small></div>
+        </article>
+        <article class="metric">
+          <div class="metric-icon">OP</div>
+          <div><span>Open</span><strong id="feedbackOpen">0</strong><small>Needs reply</small></div>
+        </article>
+        <article class="metric">
+          <div class="metric-icon">RP</div>
+          <div><span>Replied</span><strong id="feedbackReplied">0</strong><small>Completed response</small></div>
+        </article>
+      </section>
+
+      <section class="feedback-layout">
+        <form class="panel feedback-form" id="feedbackForm">
+          <div class="panel-head">
+            <div>
+              <h2>New feedback</h2>
+              <p>Share a question, issue, or improvement request.</p>
+            </div>
+          </div>
+          <div class="panel-body form-stack" id="feedbackFormPanel">
+            <div>
+              <label class="field">Subject
+                <input id="feedbackSubject" required maxlength="160" placeholder="Example: Certificate request">
+              </label>
+              <label class="field">Message
+                <textarea id="feedbackMessage" required placeholder="Write your feedback here"></textarea>
+              </label>
+              <div class="form-actions">
+                  <button class="btn primary" type="submit">Send feedback</button>
+              </div>
+            </div>
+          </div>
+        </form>
+
+        <section class="panel feedback-board">
+          <div class="panel-head">
+            <div>
+              <h2>Feedback inbox</h2>
+              <p>Students see their own messages. Admins can view and reply to all feedback.</p>
+            </div>
+          </div>
+          <div class="panel-body feedback-list" id="feedbackList"></div>
+          <div class="empty" id="feedbackEmpty">No feedback yet.</div>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status"></div>
+  <script src="app.js?v=24"></script>
+</body>
+</html>
