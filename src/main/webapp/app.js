@@ -1084,10 +1084,21 @@ function exportLeaderboard() {
 function setupAuthPages() {
   const loginRole = document.querySelector("#loginRole");
   const studentIdField = document.querySelector(".student-id-field");
+  const loginStudentId = document.querySelector("#loginStudentId");
+
+  function requireFilled(fields) {
+    const missing = fields.find(({ value }) => !String(value || "").trim());
+    if (!missing) return false;
+    showToast(`${missing.label} is required.`);
+    missing.element?.focus();
+    return true;
+  }
 
   function refreshStudentIdField() {
     if (!loginRole || !studentIdField) return;
-    studentIdField.classList.toggle("hidden", loginRole.value !== "student");
+    const isStudent = loginRole.value === "student";
+    studentIdField.classList.toggle("hidden", !isStudent);
+    if (loginStudentId) loginStudentId.required = isStudent;
   }
 
   loginRole?.addEventListener("change", refreshStudentIdField);
@@ -1095,12 +1106,25 @@ function setupAuthPages() {
 
   document.querySelector("#loginForm")?.addEventListener("submit", async event => {
     event.preventDefault();
-    const studentId = document.querySelector("#loginStudentId")?.value.trim() || "";
+    const roleInput = document.querySelector("#loginRole");
+    const emailInput = document.querySelector("#loginEmail");
+    const passwordInput = document.querySelector("#loginPassword");
+    const studentId = loginStudentId?.value.trim() || "";
     const payload = {
-      role: document.querySelector("#loginRole").value,
-      email: document.querySelector("#loginEmail").value.trim().toLowerCase(),
-      password: document.querySelector("#loginPassword").value
+      role: roleInput.value,
+      email: emailInput.value.trim().toLowerCase(),
+      password: passwordInput.value
     };
+    const loginFields = [
+      { label: "Role", value: payload.role, element: roleInput },
+      { label: "Email", value: payload.email, element: emailInput },
+      { label: "Password", value: payload.password, element: passwordInput }
+    ];
+    if (payload.role === "student") {
+      loginFields.splice(2, 0, { label: "Student ID", value: studentId, element: loginStudentId });
+    }
+    if (requireFilled(loginFields)) return;
+
     try {
       await dataSource.login(payload);
       if (payload.role === "student" && studentId) {
@@ -1121,13 +1145,26 @@ function setupAuthPages() {
 
   document.querySelector("#registerForm")?.addEventListener("submit", async event => {
     event.preventDefault();
+    const nameInput = document.querySelector("#registerName");
+    const emailInput = document.querySelector("#registerEmail");
+    const roleInput = document.querySelector("#registerRole");
+    const idInput = document.querySelector("#registerId");
+    const passwordInput = document.querySelector("#registerPassword");
     const payload = {
-      fullName: document.querySelector("#registerName").value.trim(),
-      email: document.querySelector("#registerEmail").value.trim().toLowerCase(),
-      role: document.querySelector("#registerRole").value,
-      referenceId: document.querySelector("#registerId").value.trim(),
-      password: document.querySelector("#registerPassword").value
+      fullName: nameInput.value.trim(),
+      email: emailInput.value.trim().toLowerCase(),
+      role: roleInput.value,
+      referenceId: idInput.value.trim(),
+      password: passwordInput.value
     };
+    if (requireFilled([
+      { label: "Full name", value: payload.fullName, element: nameInput },
+      { label: "Email", value: payload.email, element: emailInput },
+      { label: "Role", value: payload.role, element: roleInput },
+      { label: "Student ID / NGO code", value: payload.referenceId, element: idInput },
+      { label: "Password", value: payload.password, element: passwordInput }
+    ])) return;
+
     try {
       await dataSource.register(payload);
       go("dashboard.html");

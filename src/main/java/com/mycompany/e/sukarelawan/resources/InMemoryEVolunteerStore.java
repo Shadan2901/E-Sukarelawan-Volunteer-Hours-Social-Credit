@@ -32,6 +32,9 @@ public class InMemoryEVolunteerStore implements EVolunteerStore {
 
     @Override
     public synchronized User login(LoginRequest request) {
+        requireFilled("Role", request.role);
+        requireFilled("Email", request.email);
+        requireFilled("Password", request.password);
         String email = normalize(request.email);
         for (User user : data.users) {
             if (normalize(user.email).equals(email) && safe(user.role).equals(request.role)) {
@@ -47,6 +50,11 @@ public class InMemoryEVolunteerStore implements EVolunteerStore {
 
     @Override
     public synchronized User register(RegisterRequest request) {
+        requireFilled("Full name", request.fullName);
+        requireFilled("Email", request.email);
+        requireFilled("Role", request.role);
+        requireFilled("Student ID / NGO code", request.referenceId);
+        requireFilled("Password", request.password);
         String email = normalize(request.email);
         for (User user : data.users) {
             if (normalize(user.email).equals(email)) {
@@ -249,6 +257,12 @@ public class InMemoryEVolunteerStore implements EVolunteerStore {
 
     private static String safe(String value) {
         return value == null ? "" : value;
+    }
+
+    private static void requireFilled(String label, String value) {
+        if (value == null || value.isBlank()) {
+            throw new IllegalArgumentException(label + " is required.");
+        }
     }
 
     private static User publicUser(User user) {

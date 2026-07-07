@@ -98,6 +98,9 @@ public class JdbcEVolunteerStore implements EVolunteerStore {
 
     @Override
     public User login(LoginRequest request) {
+        requireFilled("Role", request.role);
+        requireFilled("Email", request.email);
+        requireFilled("Password", request.password);
         try (Connection connection = connection();
              PreparedStatement statement = connection.prepareStatement("SELECT id, full_name, email, password_hash, role, reference_id, ngo_name, profile_phone, profile_faculty, profile_programme, profile_bio, profile_photo FROM users WHERE LOWER(email) = LOWER(?) AND role = ?")) {
             statement.setString(1, request.email);
@@ -120,6 +123,11 @@ public class JdbcEVolunteerStore implements EVolunteerStore {
 
     @Override
     public User register(RegisterRequest request) {
+        requireFilled("Full name", request.fullName);
+        requireFilled("Email", request.email);
+        requireFilled("Role", request.role);
+        requireFilled("Student ID / NGO code", request.referenceId);
+        requireFilled("Password", request.password);
         try (Connection connection = connection();
              PreparedStatement statement = connection.prepareStatement(
                      "INSERT INTO users (full_name, email, password_hash, role, reference_id, ngo_name) VALUES (?, ?, ?, ?, ?, ?)",
@@ -514,6 +522,12 @@ public class JdbcEVolunteerStore implements EVolunteerStore {
             return builder.toString();
         } catch (Exception exception) {
             throw new IllegalStateException("Password hashing is unavailable.", exception);
+        }
+    }
+
+    private static void requireFilled(String label, String value) {
+        if (value == null || value.isBlank()) {
+            throw new IllegalArgumentException(label + " is required.");
         }
     }
 }
