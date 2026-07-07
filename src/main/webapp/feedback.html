@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=24">
+  <link rel="stylesheet" href="styles.css?v=36">
 </head>
 <body data-page="feedback">
   <div class="app-shell">
@@ -47,8 +47,8 @@
               <p>Share a question, issue, or improvement request.</p>
             </div>
           </div>
-          <div class="panel-body form-stack" id="feedbackFormPanel">
-            <div>
+          <div class="panel-body feedback-form-body form-stack" id="feedbackFormPanel">
+            <div class="feedback-fields">
               <label class="field">Subject
                 <input id="feedbackSubject" required maxlength="160" placeholder="Example: Certificate request">
               </label>
@@ -56,7 +56,7 @@
                 <textarea id="feedbackMessage" required placeholder="Write your feedback here"></textarea>
               </label>
               <div class="form-actions">
-                  <button class="btn primary" type="submit">Send feedback</button>
+                <button class="btn primary" type="submit">Send feedback</button>
               </div>
             </div>
           </div>
@@ -77,6 +77,6 @@
   </div>
 
   <div class="toast" id="toast" role="status"></div>
-  <script src="app.js?v=24"></script>
+  <script src="app.js?v=36"></script>
 </body>
 </html>

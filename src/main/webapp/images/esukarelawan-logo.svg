@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">E-Sukarelawan logo</title>
+  <desc id="desc">A volunteer figure growing from an open hand with leaves above.</desc>
+  <defs>
+    <linearGradient id="palm" x1="44" y1="168" x2="220" y2="202" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#08724e"/>
+      <stop offset="1" stop-color="#045c43"/>
+    </linearGradient>
+    <linearGradient id="sprout" x1="110" y1="73" x2="159" y2="166" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#0d7a55"/>
+      <stop offset="1" stop-color="#046348"/>
+    </linearGradient>
+    <linearGradient id="leaf" x1="75" y1="44" x2="187" y2="121" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#9ac500"/>
+      <stop offset="1" stop-color="#71a900"/>
+    </linearGradient>
+  </defs>
+
+  <path fill="url(#palm)" d="M41 164c26-28 69-22 108 1 15 9 34 12 55 15 9 1 14 6 12 13-2 8-11 13-26 14l-57 2-30-15-6 7 35 24c43 7 81-8 100-45 5-9 15-12 24-9-17 48-57 79-110 83-51 3-89-22-105-90Z"/>
+  <path fill="url(#sprout)" d="M128 91c9 24 28 42 55 52-12 8-25 9-38 4-2 24 0 42 6 55h-34c-2-17-3-34-1-51-17-8-29-22-37-42 19 20 36 27 49 21V91Z"/>
+  <circle cx="133" cy="89" r="17" fill="#046348"/>
+
+  <g fill="url(#leaf)">
+    <path d="M97 55c21 8 31 26 25 49-23-1-38-16-40-38 5-7 10-10 15-11Z"/>
+    <path d="M159 45c20 8 26 26 18 49-22 1-35-10-37-31 5-10 12-16 19-18Z"/>
+    <path d="M64 91c22 4 36 20 36 42-22 6-40-3-48-25 3-9 7-14 12-17Z"/>
+    <path d="M198 95c-12 21-31 29-54 22 4-23 19-37 42-40 7 5 11 11 12 18Z"/>
+    <path d="M73 143c-16 17-36 21-58 10 12-20 30-28 53-22 5 4 6 8 5 12Z"/>
+    <path d="M181 144c25-11 48-5 66 17-22 18-46 17-69-1-2-7-1-12 3-16Z"/>
+    <path d="M82 37c17 3 27 15 27 32-17 4-30-4-37-20 2-6 5-10 10-12Z"/>
+    <path d="M140 23c15 9 20 22 14 39-17-1-27-11-28-28 4-6 8-10 14-11Z"/>
+    <path d="M203 57c15-8 29-6 41 7-8 15-22 20-39 14-4-7-5-14-2-21Z"/>
+    <path d="M210 130c17-2 30 5 39 20-14 10-29 9-42-3-2-7-1-13 3-17Z"/>
+    <path d="M116 132c15-3 27 4 35 18-12 11-26 11-39 1-3-7-2-13 4-19Z"/>
+  </g>
+</svg>

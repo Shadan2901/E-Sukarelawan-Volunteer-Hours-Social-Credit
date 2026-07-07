@@ -16,6 +16,7 @@ import com.mycompany.e.sukarelawan.resources.ApiModels.User;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -38,8 +39,30 @@ public class JdbcEVolunteerStore implements EVolunteerStore {
             if (!connection.isValid(3)) {
                 throw new IllegalStateException("Database connection is not valid.");
             }
+            ensureProfileColumns(connection);
         } catch (Exception exception) {
             throw new IllegalStateException("Could not connect to database.", exception);
+        }
+    }
+
+    private void ensureProfileColumns(Connection connection) throws Exception {
+        addColumnIfMissing(connection, "profile_phone", "VARCHAR(40)");
+        addColumnIfMissing(connection, "profile_faculty", "VARCHAR(140)");
+        addColumnIfMissing(connection, "profile_programme", "VARCHAR(140)");
+        addColumnIfMissing(connection, "profile_bio", "TEXT");
+        addColumnIfMissing(connection, "profile_photo", "LONGTEXT");
+        try (Statement statement = connection.createStatement()) {
+            statement.executeUpdate("ALTER TABLE users MODIFY profile_photo LONGTEXT");
+        }
+    }
+
+    private void addColumnIfMissing(Connection connection, String column, String definition) throws Exception {
+        DatabaseMetaData metadata = connection.getMetaData();
+        try (ResultSet columns = metadata.getColumns(connection.getCatalog(), null, "users", column)) {
+            if (columns.next()) return;
+        }
+        try (Statement statement = connection.createStatement()) {
+            statement.executeUpdate("ALTER TABLE users ADD COLUMN " + column + " " + definition);
         }
     }
 

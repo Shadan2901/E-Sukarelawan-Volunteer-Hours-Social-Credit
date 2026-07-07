@@ -12,7 +12,6 @@ import com.mycompany.e.sukarelawan.resources.ApiModels.Profile;
 import com.mycompany.e.sukarelawan.resources.ApiModels.ProfileRequest;
 import com.mycompany.e.sukarelawan.resources.ApiModels.RegisterRequest;
 import com.mycompany.e.sukarelawan.resources.ApiModels.User;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -339,30 +338,44 @@ public class ESukarelawanApiServlet extends HttpServlet {
     }
 
     private static String text(String json, String key) {
-        Matcher matcher = Pattern.compile("\"" + Pattern.quote(key) + "\"\\s*:\\s*\"((?:\\\\.|[^\"])*)\"").matcher(json == null ? "" : json);
-        return matcher.find() ? unescape(matcher.group(1)) : "";
+        String value = stringValue(json, key);
+        return value == null ? "" : value;
     }
 
     private static String nullableText(String json, String key) {
-        Matcher nullMatcher = Pattern.compile("\"" + Pattern.quote(key) + "\"\\s*:\\s*null\\b").matcher(json == null ? "" : json);
-        if (nullMatcher.find()) return null;
-        String value = text(json, key);
+        if (isNullValue(json, key)) return null;
+        String value = stringValue(json, key);
         return value == null || value.isBlank() ? null : value;
     }
 
     private static int number(String json, String key) {
-        Matcher matcher = Pattern.compile("\"" + Pattern.quote(key) + "\"\\s*:\\s*(-?\\d+)").matcher(json == null ? "" : json);
-        return matcher.find() ? Integer.parseInt(matcher.group(1)) : 0;
+        String value = literalValue(json, key);
+        return value == null || value.isBlank() ? 0 : Integer.parseInt(value);
     }
 
     private static double decimal(String json, String key) {
-        Matcher matcher = Pattern.compile("\"" + Pattern.quote(key) + "\"\\s*:\\s*(-?\\d+(?:\\.\\d+)?)").matcher(json == null ? "" : json);
-        return matcher.find() ? Double.parseDouble(matcher.group(1)) : 0;
+        String value = literalValue(json, key);
+        return value == null || value.isBlank() ? 0 : Double.parseDouble(value);
     }
 
     private static String object(String json, String key) {
-        Matcher matcher = Pattern.compile("\"" + Pattern.quote(key) + "\"\\s*:\\s*\\{(.*)}\\s*}?", Pattern.DOTALL).matcher(json == null ? "" : json);
-        return matcher.find() ? matcher.group(1) : "";
+        if (json == null) return "";
+        int start = valueStart(json, key);
+        if (start < 0 || start >= json.length() || json.charAt(start) != '{') return "";
+        int depth = 0;
+        for (int index = start; index < json.length(); index++) {
+            char current = json.charAt(index);
+            if (current == '"') {
+                index = readJsonString(json, index).next - 1;
+                continue;
+            }
+            if (current == '{') depth++;
+            if (current == '}') {
+                depth--;
+                if (depth == 0) return json.substring(start + 1, index);
+            }
+        }
+        return "";
     }
 
     private static String unescape(String value) {
@@ -371,5 +384,95 @@ public class ESukarelawanApiServlet extends HttpServlet {
                 .replace("\\n", "\n")
                 .replace("\\r", "\r")
                 .replace("\\t", "\t");
+    }
+
+    private static String stringValue(String json, String key) {
+        if (json == null) return null;
+        int start = valueStart(json, key);
+        if (start < 0 || start >= json.length() || json.charAt(start) != '"') return null;
+        return readJsonString(json, start).value;
+    }
+
+    private static boolean isNullValue(String json, String key) {
+        if (json == null) return false;
+        int start = valueStart(json, key);
+        return start >= 0 && json.startsWith("null", start);
+    }
+
+    private static String literalValue(String json, String key) {
+        if (json == null) return null;
+        int start = valueStart(json, key);
+        if (start < 0) return null;
+        int end = start;
+        while (end < json.length() && "-+.0123456789Ee".indexOf(json.charAt(end)) >= 0) {
+            end++;
+        }
+        return json.substring(start, end);
+    }
+
+    private static int valueStart(String json, String key) {
+        int index = 0;
+        while (index < json.length()) {
+            int quote = json.indexOf('"', index);
+            if (quote < 0) return -1;
+            JsonString parsedKey = readJsonString(json, quote);
+            index = skipWhitespace(json, parsedKey.next);
+            if (index < json.length() && json.charAt(index) == ':' && key.equals(parsedKey.value)) {
+                return skipWhitespace(json, index + 1);
+            }
+            index = Math.max(parsedKey.next, quote + 1);
+        }
+        return -1;
+    }
+
+    private static int skipWhitespace(String value, int index) {
+        while (index < value.length() && Character.isWhitespace(value.charAt(index))) {
+            index++;
+        }
+        return index;
+    }
+
+    private static JsonString readJsonString(String json, int quoteIndex) {
+        StringBuilder value = new StringBuilder();
+        for (int index = quoteIndex + 1; index < json.length(); index++) {
+            char current = json.charAt(index);
+            if (current == '"') return new JsonString(value.toString(), index + 1);
+            if (current != '\\') {
+                value.append(current);
+                continue;
+            }
+            if (++index >= json.length()) break;
+            char escaped = json.charAt(index);
+            switch (escaped) {
+                case '"': value.append('"'); break;
+                case '\\': value.append('\\'); break;
+                case '/': value.append('/'); break;
+                case 'b': value.append('\b'); break;
+                case 'f': value.append('\f'); break;
+                case 'n': value.append('\n'); break;
+                case 'r': value.append('\r'); break;
+                case 't': value.append('\t'); break;
+                case 'u':
+                    if (index + 4 < json.length()) {
+                        value.append((char) Integer.parseInt(json.substring(index + 1, index + 5), 16));
+                        index += 4;
+                    }
+                    break;
+                default:
+                    value.append(escaped);
+                    break;
+            }
+        }
+        return new JsonString(value.toString(), json.length());
+    }
+
+    private static class JsonString {
+        final String value;
+        final int next;
+
+        JsonString(String value, int next) {
+            this.value = value;
+            this.next = next;
+        }
     }
 }

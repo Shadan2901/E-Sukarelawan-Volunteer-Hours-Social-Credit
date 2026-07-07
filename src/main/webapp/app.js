@@ -3,6 +3,7 @@ const STORAGE_KEY = "eSukarelawanStateV6";
 const SESSION_KEY = "eSukarelawanSessionV1";
 const UNIVERSITY_SESSION_KEY = "eSukarelawanUniversityHintV1";
 const THEME_KEY = "eSukarelawanThemeV1";
+const SIDEBAR_KEY = "eSukarelawanSidebarCollapsedV1";
 const WINDOW_STATE_PREFIX = "ESUKARELAWAN:";
 const pageName = document.body.dataset.page || "entry";
 const API_BASE = `${window.location.origin}${contextPath()}/resources/api`;
@@ -276,6 +277,46 @@ function toggleTheme() {
   showToast(`${nextTheme === "dark" ? "Dark" : "Light"} theme enabled.`);
 }
 
+function sidebarCollapsed() {
+  try {
+    return localStorage.getItem(SIDEBAR_KEY) === "true";
+  } catch {
+    return false;
+  }
+}
+
+function applySidebarState(collapsed = sidebarCollapsed()) {
+  document.body.classList.toggle("sidebar-collapsed", collapsed);
+  const toggle = document.querySelector("#sidebarToggleBtn");
+  if (!toggle) return;
+  toggle.textContent = collapsed ? ">" : "<";
+  toggle.setAttribute("aria-label", collapsed ? "Show sidebar" : "Hide sidebar");
+  toggle.setAttribute("aria-expanded", String(!collapsed));
+  toggle.title = collapsed ? "Show sidebar" : "Hide sidebar";
+}
+
+function setupSidebarToggle() {
+  if (!document.querySelector("#sidebar") || !document.querySelector("#topbar")) return;
+  let toggle = document.querySelector("#sidebarToggleBtn");
+  if (!toggle) {
+    toggle = document.createElement("button");
+    toggle.id = "sidebarToggleBtn";
+    toggle.className = "sidebar-toggle";
+    toggle.type = "button";
+    document.body.appendChild(toggle);
+  }
+  toggle.onclick = () => {
+    const next = !document.body.classList.contains("sidebar-collapsed");
+    try {
+      localStorage.setItem(SIDEBAR_KEY, String(next));
+    } catch {
+      // The sidebar still collapses for this page when storage is unavailable.
+    }
+    applySidebarState(next);
+  };
+  applySidebarState();
+}
+
 class LocalDataSource {
   constructor() {
     this.mode = "local";
@@ -531,23 +572,29 @@ class ApiDataSource extends LocalDataSource {
 }
 
 async function apiFetch(path, options = {}) {
-  const response = await fetch(`${API_BASE}${path}`, {
-    method: options.method || "GET",
-    headers: { "Content-Type": "application/json", "Accept": "application/json" },
-    body: options.body ? JSON.stringify(options.body) : undefined
-  });
+  let response;
+  try {
+    response = await fetch(`${API_BASE}${path}`, {
+      method: options.method || "GET",
+      headers: { "Content-Type": "application/json", "Accept": "application/json" },
+      body: options.body ? JSON.stringify(options.body) : undefined
+    });
+  } catch {
+    throw new Error("Could not reach the server. Try a smaller picture or restart the Java server.");
+  }
+  const text = await response.text();
   if (!response.ok) {
     let message = "The server could not complete the request.";
     try {
-      const error = await response.json();
+      const error = JSON.parse(text);
       message = error.message || message;
     } catch {
-      message = await response.text() || message;
+      message = text || message;
     }
     throw new Error(message);
   }
   if (response.status === 204) return null;
-  return response.json();
+  return text ? JSON.parse(text) : null;
 }
 
 async function chooseDataSource() {
@@ -594,10 +641,10 @@ function renderShell() {
   const displayName = displayNameForUser(user);
 
   const links = [
-    ["dashboard", "dashboard.html", "⌂", "Dashboard"],
-    ["opportunities", "opportunities.html", "●", "Opportunities"],
-    ["hours", "hours.html", "◷", "Volunteer hours"],
-    ["leaderboard", "leaderboard.html", "♕", "Leaderboard"]
+    ["dashboard", "dashboard.html", "🏠", "Dashboard"],
+    ["opportunities", "opportunities.html", "🤝", "Opportunities"],
+    ["hours", "hours.html", "⏱️", "Volunteer hours"],
+    ["leaderboard", "leaderboard.html", "🏆", "Leaderboard"]
   ];
 
   sidebar.innerHTML = `
@@ -630,6 +677,7 @@ function renderShell() {
     await dataSource.logout();
     go("login.html");
   });
+  setupSidebarToggle();
 }
 
 function renderShell() {
@@ -641,13 +689,12 @@ function renderShell() {
   const isStudent = user.role === "student";
 
   const links = [
-    ["dashboard", "dashboard.html", "DB", "Dashboard"],
-    ["opportunities", "opportunities.html", "OP", "Volunteer opportunities"],
-    ["hours", "hours.html", "HR", "Volunteer hours"],
-    ["approval", "hours.html", "AP", "Volunteer hours approval"],
-    ["leaderboard", "leaderboard.html", "LB", "Leaderboard"],
-    ["feedback", "feedback.html", "FB", "Feedback"],
-    ["profile", "profile.html", "PF", "Profile"]
+    ["dashboard", "dashboard.html", "🏠", "Dashboard"],
+    ["opportunities", "opportunities.html", "🤝", "Volunteer opportunities"],
+    ["hours", "hours.html", "⏱️", "Volunteer hours"],
+    ["leaderboard", "leaderboard.html", "🏆", "Leaderboard"],
+    ["feedback", "feedback.html", "💬", "Feedback"],
+    ["profile", "profile.html", "👤", "Profile"]
   ];
 
   sidebar.innerHTML = `
@@ -657,7 +704,7 @@ function renderShell() {
     </div>
     <nav class="side-nav">
       ${links.map(([page, href, icon, label]) => `
-        <a class="nav-link ${pageName === page || (pageName === "hours" && page === "approval" && user.role === "admin") ? "active" : ""}" href="${href}">
+        <a class="nav-link ${pageName === page ? "active" : ""}" href="${href}">
           <span class="nav-icon">${icon}</span><span>${label}</span>
         </a>
       `).join("")}
@@ -691,6 +738,7 @@ function renderShell() {
     await dataSource.logout();
     go("login.html");
   });
+  setupSidebarToggle();
 }
 
 function renderDashboard() {
@@ -1036,41 +1084,14 @@ function exportLeaderboard() {
 function setupAuthPages() {
   const loginRole = document.querySelector("#loginRole");
   const studentIdField = document.querySelector(".student-id-field");
-  const studentIdInput = document.querySelector("#loginStudentId");
-  const detector = document.querySelector("#universityDetector");
 
-  function refreshUniversityDetector() {
-    if (!loginRole || !studentIdField || !detector) return;
-    const isStudent = loginRole.value === "student";
-    studentIdField.classList.toggle("hidden", !isStudent);
-    detector.classList.toggle("hidden", !isStudent);
-    if (!isStudent) return;
-
-    const university = detectUniversityFromId(studentIdInput?.value);
-    const code = detector.querySelector(".detector-logo");
-    const title = detector.querySelector("strong");
-    const copy = detector.querySelector("span:not(.brand-mark)");
-
-    if (!university) {
-      code.dataset.logo = "E";
-      code.className = "brand-mark detector-logo university-logo university-logo-es";
-      title.textContent = "Enter student ID";
-      copy.textContent = "Your university will be detected here.";
-      detector.classList.remove("detected", "unknown");
-      return;
-    }
-
-    code.dataset.logo = university.code;
-    code.className = `brand-mark detector-logo university-logo university-logo-${categoryClass(university.code)}`;
-    title.textContent = university.name;
-    copy.textContent = university.motto;
-    detector.classList.toggle("unknown", university.code === "UNI");
-    detector.classList.toggle("detected", university.code !== "UNI");
+  function refreshStudentIdField() {
+    if (!loginRole || !studentIdField) return;
+    studentIdField.classList.toggle("hidden", loginRole.value !== "student");
   }
 
-  loginRole?.addEventListener("change", refreshUniversityDetector);
-  studentIdInput?.addEventListener("input", refreshUniversityDetector);
-  refreshUniversityDetector();
+  loginRole?.addEventListener("change", refreshStudentIdField);
+  refreshStudentIdField();
 
   document.querySelector("#loginForm")?.addEventListener("submit", async event => {
     event.preventDefault();
@@ -1124,11 +1145,10 @@ function renderShell() {
   const university = universityForUser(user);
 
   const links = [
-    ["dashboard", "dashboard.html", "⌂", "Dashboard"],
-    ["opportunities", "opportunities.html", "▣", "Volunteer opportunities"],
-    ["hours", "hours.html", "◷", "Volunteer hours"],
-    ["approval", "hours.html", "AP", "Volunteer hours approval"],
-    ["leaderboard", "leaderboard.html", "▥", "Leaderboard"]
+    ["dashboard", "dashboard.html", "🏠", "Dashboard"],
+    ["opportunities", "opportunities.html", "🤝", "Volunteer opportunities"],
+    ["hours", "hours.html", "⏱️", "Volunteer hours"],
+    ["leaderboard", "leaderboard.html", "🏆", "Leaderboard"]
   ];
 
   sidebar.innerHTML = `
@@ -1138,7 +1158,7 @@ function renderShell() {
     </div>
     <nav class="side-nav">
       ${links.map(([page, href, icon, label]) => `
-        <a class="nav-link ${pageName === page || (pageName === "hours" && page === "approval" && user.role === "admin") ? "active" : ""}" href="${href}">
+        <a class="nav-link ${pageName === page ? "active" : ""}" href="${href}">
           <span class="nav-icon">${icon}</span><span>${label}</span>
         </a>
       `).join("")}
@@ -1173,6 +1193,7 @@ function renderShell() {
     await dataSource.logout();
     go("login.html");
   });
+  setupSidebarToggle();
 }
 
 function renderDashboard() {
@@ -1301,13 +1322,12 @@ function renderShell() {
   const isStudent = user.role === "student";
 
   const links = [
-    ["dashboard", "dashboard.html", "DB", "Dashboard"],
-    ["opportunities", "opportunities.html", "OP", "Volunteer opportunities"],
-    ["hours", "hours.html", "HR", "Volunteer hours"],
-    ["approval", "hours.html", "AP", "Volunteer hours approval"],
-    ["leaderboard", "leaderboard.html", "LB", "Leaderboard"],
-    ["feedback", "feedback.html", "FB", "Feedback"],
-    ["profile", "profile.html", "PF", "Profile"]
+    ["dashboard", "dashboard.html", "🏠", "Dashboard"],
+    ["opportunities", "opportunities.html", "🤝", "Volunteer opportunities"],
+    ["hours", "hours.html", "⏱️", "Volunteer hours"],
+    ["leaderboard", "leaderboard.html", "🏆", "Leaderboard"],
+    ["feedback", "feedback.html", "💬", "Feedback"],
+    ["profile", "profile.html", "👤", "Profile"]
   ];
 
   sidebar.innerHTML = `
@@ -1317,7 +1337,7 @@ function renderShell() {
     </div>
     <nav class="side-nav">
       ${links.map(([page, href, icon, label]) => `
-        <a class="nav-link ${pageName === page || (pageName === "hours" && page === "approval" && user.role === "admin") ? "active" : ""}" href="${href}">
+        <a class="nav-link ${pageName === page ? "active" : ""}" href="${href}">
           <span class="nav-icon">${icon}</span><span>${label}</span>
         </a>
       `).join("")}
@@ -1351,6 +1371,7 @@ function renderShell() {
     await dataSource.logout();
     go("login.html");
   });
+  setupSidebarToggle();
 }
 
 function renderShell() {
@@ -1363,13 +1384,12 @@ function renderShell() {
   const isStudent = user.role === "student";
   const displayName = displayNameForUser(user);
   const links = [
-    ["dashboard", "dashboard.html", "DB", "Dashboard"],
-    ["opportunities", "opportunities.html", "OP", "Volunteer opportunities"],
-    ["hours", "hours.html", "HR", "Volunteer hours"],
-    ["approval", "hours.html", "AP", "Volunteer hours approval"],
-    ["leaderboard", "leaderboard.html", "LB", "Leaderboard"],
-    ["feedback", "feedback.html", "FB", "Feedback"],
-    ["profile", "profile.html", "PF", "Profile"]
+    ["dashboard", "dashboard.html", "🏠", "Dashboard"],
+    ["opportunities", "opportunities.html", "🤝", "Volunteer opportunities"],
+    ["hours", "hours.html", "⏱️", "Volunteer hours"],
+    ["leaderboard", "leaderboard.html", "🏆", "Leaderboard"],
+    ["feedback", "feedback.html", "💬", "Feedback"],
+    ["profile", "profile.html", "👤", "Profile"]
   ];
 
   sidebar.innerHTML = `
@@ -1379,7 +1399,7 @@ function renderShell() {
     </div>
     <nav class="side-nav">
       ${links.map(([page, href, icon, label]) => `
-        <a class="nav-link ${pageName === page || (pageName === "hours" && page === "approval" && user.role === "admin") ? "active" : ""}" href="${href}">
+        <a class="nav-link ${pageName === page ? "active" : ""}" href="${href}">
           <span class="nav-icon">${icon}</span><span>${label}</span>
         </a>
       `).join("")}
@@ -1413,9 +1433,54 @@ function renderShell() {
     await dataSource.logout();
     go("login.html");
   });
+  setupSidebarToggle();
 }
 
 let profilePhotoDraft = null;
+const PROFILE_PHOTO_MAX_FILE_SIZE = 5 * 1024 * 1024;
+const PROFILE_PHOTO_MAX_EDGE = 900;
+const PROFILE_PHOTO_TARGET_LENGTH = 900000;
+
+function readFileAsDataUrl(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.addEventListener("load", () => resolve(String(reader.result || "")));
+    reader.addEventListener("error", () => reject(new Error("Could not read the selected picture.")));
+    reader.readAsDataURL(file);
+  });
+}
+
+function loadImage(dataUrl) {
+  return new Promise((resolve, reject) => {
+    const image = new Image();
+    image.addEventListener("load", () => resolve(image));
+    image.addEventListener("error", () => reject(new Error("Could not prepare the selected picture.")));
+    image.src = dataUrl;
+  });
+}
+
+async function prepareProfilePhoto(file) {
+  const original = await readFileAsDataUrl(file);
+  const image = await loadImage(original);
+  const scale = Math.min(1, PROFILE_PHOTO_MAX_EDGE / Math.max(image.naturalWidth, image.naturalHeight));
+  const width = Math.max(1, Math.round(image.naturalWidth * scale));
+  const height = Math.max(1, Math.round(image.naturalHeight * scale));
+  const canvas = document.createElement("canvas");
+  canvas.width = width;
+  canvas.height = height;
+  const context = canvas.getContext("2d");
+  context.fillStyle = "#ffffff";
+  context.fillRect(0, 0, width, height);
+  context.drawImage(image, 0, 0, width, height);
+
+  let quality = 0.82;
+  let compressed = canvas.toDataURL("image/jpeg", quality);
+  while (compressed.length > PROFILE_PHOTO_TARGET_LENGTH && quality > 0.55) {
+    quality -= 0.08;
+    compressed = canvas.toDataURL("image/jpeg", quality);
+  }
+  return compressed.length < original.length ? compressed : original;
+}
 
 function renderProfile() {
   const user = currentUser();
@@ -1470,35 +1535,7 @@ function setupProfilePage() {
   const removeButton = document.querySelector("#removeProfilePhotoBtn");
   if (!form) return;
 
-  photoInput?.addEventListener("change", event => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-    if (!file.type.startsWith("image/")) {
-      showToast("Please choose an image file.");
-      event.target.value = "";
-      return;
-    }
-    if (file.size > 1500000) {
-      showToast("Picture must be under 1.5 MB.");
-      event.target.value = "";
-      return;
-    }
-    const reader = new FileReader();
-    reader.addEventListener("load", () => {
-      profilePhotoDraft = String(reader.result || "");
-      renderProfile();
-    });
-    reader.readAsDataURL(file);
-  });
-
-  removeButton?.addEventListener("click", () => {
-    profilePhotoDraft = "";
-    if (photoInput) photoInput.value = "";
-    renderProfile();
-  });
-
-  form.addEventListener("submit", async event => {
-    event.preventDefault();
+  async function saveProfileChanges(successMessage) {
     const user = currentUser();
     if (!user) return;
     const profile = profileForUser(user);
@@ -1517,19 +1554,64 @@ function setupProfilePage() {
       profile: nextProfile
     };
 
+    await dataSource.updateProfile(user.id, payload);
+    const updatedUser = currentUser() || user;
+    Object.assign(updatedUser, payload);
+    updatedUser.profile = nextProfile;
+    if (updatedUser.role === "admin") updatedUser.ngoName = payload.fullName;
+    if (updatedUser.role === "student" && updatedUser.referenceId) {
+      sessionStorage.setItem(UNIVERSITY_SESSION_KEY, updatedUser.referenceId);
+    }
+    profilePhotoDraft = null;
+    setRoleClasses();
+    renderShell();
+    renderProfile();
+    setupProfilePage();
+    showToast(successMessage);
+  }
+
+  photoInput?.addEventListener("change", async event => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      showToast("Please choose an image file.");
+      event.target.value = "";
+      return;
+    }
+    if (file.size > PROFILE_PHOTO_MAX_FILE_SIZE) {
+      showToast("Picture must be under 5 MB.");
+      event.target.value = "";
+      return;
+    }
     try {
-      await dataSource.updateProfile(user.id, payload);
-      Object.assign(user, payload);
-      user.profile = nextProfile;
-      if (user.role === "admin") user.ngoName = payload.fullName;
-      if (user.role === "student" && user.referenceId) {
-        sessionStorage.setItem(UNIVERSITY_SESSION_KEY, user.referenceId);
+      showToast("Preparing profile picture...");
+      profilePhotoDraft = await prepareProfilePhoto(file);
+      const user = currentUser();
+      const preview = document.querySelector("#profilePhotoPreview");
+      if (preview && user) {
+        preview.innerHTML = `<img src="${escapeHtml(profilePhotoDraft)}" alt="${escapeHtml(user.fullName)} profile picture">`;
       }
-      profilePhotoDraft = null;
-      setRoleClasses();
-      renderShell();
-      renderProfile();
-      showToast("Profile updated.");
+      await saveProfileChanges("Profile picture saved to database.");
+    } catch (error) {
+      event.target.value = "";
+      showToast(error.message);
+    }
+  });
+
+  removeButton?.addEventListener("click", async () => {
+    profilePhotoDraft = "";
+    if (photoInput) photoInput.value = "";
+    try {
+      await saveProfileChanges("Profile picture removed from database.");
+    } catch (error) {
+      showToast(error.message);
+    }
+  });
+
+  form.addEventListener("submit", async event => {
+    event.preventDefault();
+    try {
+      await saveProfileChanges("Profile updated.");
     } catch (error) {
       showToast(error.message);
     }
@@ -1549,8 +1631,9 @@ function renderFeedback() {
     .slice()
     .sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
 
-  const openCount = feedbackItems.filter(item => item.status !== "replied").length;
-  const repliedCount = feedbackItems.filter(item => item.status === "replied").length;
+  const hasAdminReply = item => Boolean(String(item.adminReply || "").trim());
+  const openCount = feedbackItems.filter(item => !hasAdminReply(item)).length;
+  const repliedCount = feedbackItems.filter(hasAdminReply).length;
   const totalNode = document.querySelector("#feedbackTotal");
   const openNode = document.querySelector("#feedbackOpen");
   const repliedNode = document.querySelector("#feedbackReplied");
@@ -1564,21 +1647,22 @@ function renderFeedback() {
   listNode.innerHTML = feedbackItems.map(item => {
     const student = userName(item.studentId, "Student");
     const admin = item.adminId ? userName(item.adminId, "Admin") : "Awaiting admin";
-    const replied = item.status === "replied";
+    const replied = hasAdminReply(item);
+    const statusLabel = replied ? "replied" : item.status || "open";
     return `
       <article class="feedback-card ${replied ? "replied" : "open"}">
         <div class="feedback-card-head">
           <div class="queue-avatar">${initials(student)}</div>
           <div>
-            <span class="section-tag">${escapeHtml(item.status || "open")}</span>
+            <span class="section-tag">${escapeHtml(statusLabel)}</span>
             <h3>${escapeHtml(item.subject)}</h3>
             <p>${escapeHtml(student)} - ${formatDateTime(item.createdAt)}</p>
           </div>
         </div>
         <p class="feedback-message">${escapeHtml(item.message)}</p>
         <div class="feedback-reply ${replied ? "" : "pending"}">
-          <strong>${replied ? `Reply from ${escapeHtml(admin)}` : "No reply yet"}</strong>
-          <p>${replied ? escapeHtml(item.adminReply) : "Admin can reply to this feedback from this page."}</p>
+          <strong>${replied ? `Admin reply from ${escapeHtml(admin)}` : "No admin reply yet"}</strong>
+          <p>${replied ? escapeHtml(item.adminReply) : (isAdmin ? "Reply to this feedback below." : "Your admin has not replied yet. The reply will appear here once it is sent.")}</p>
           ${replied ? `<small>${formatDateTime(item.repliedAt)}</small>` : ""}
         </div>
         ${isAdmin ? `
