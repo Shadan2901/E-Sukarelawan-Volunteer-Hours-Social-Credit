@@ -1,6 +1,6 @@
-# E-Sukarelawan
+# E-Volunteer
 
-E-Sukarelawan is a Jakarta EE volunteer management system implemented as separate pages with a dashboard style inspired by the SWCorp Sukarelawan portal.
+E-Volunteer is a Jakarta EE volunteer management system implemented as separate pages with a dashboard style inspired by a public volunteer portal.
 
 ## Functions
 
@@ -16,7 +16,13 @@ E-Sukarelawan is a Jakarta EE volunteer management system implemented as separat
 - Java REST endpoints for authentication, opportunities, applications, hours, and dashboard state
 - Database-ready schema for users, opportunities, applications, and volunteer hours
 - Responsive desktop and mobile layout
-- Separate pages for login, registration, dashboard, opportunities, volunteer hours, and leaderboard
+- JSP views for login, registration, dashboard, opportunities, volunteer hours, leaderboard, feedback, and profile
+
+## MVC mapping
+
+- Servlet controller: `src/main/java/com/mycompany/e/sukarelawan/resources/ESukarelawanApiServlet.java`
+- JSP views: `src/main/webapp/*.jsp`
+- JavaBean/model classes: `ApiModels.java`, `EVolunteerStore.java`, `JdbcEVolunteerStore.java`, and `InMemoryEVolunteerStore.java`
 
 ## Demo accounts
 
@@ -39,10 +45,11 @@ When deployed to a Jakarta EE server, the frontend first tries the REST API unde
 
 `/resources/api`
 
-The backend now chooses its storage automatically:
+The backend uses MySQL database storage by default:
 
-- If database settings are provided, it uses `JdbcEVolunteerStore`.
-- If database settings are missing or the connection fails, it falls back to `InMemoryEVolunteerStore` for demo use.
+- The default connection is `jdbc:mysql://localhost:3307/esukarelawan`.
+- If MySQL is not running or the database is missing, the app will show the database error instead of silently using demo data.
+- Set `ESUKARELAWAN_REQUIRE_DB=false` only when you intentionally want temporary demo mode.
 
 Set these environment variables or Java system properties before deploying:
 
@@ -50,6 +57,7 @@ Set these environment variables or Java system properties before deploying:
 ESUKARELAWAN_DB_URL=jdbc:mysql://localhost:3307/esukarelawan
 ESUKARELAWAN_DB_USER=root
 ESUKARELAWAN_DB_PASSWORD=
+ESUKARELAWAN_REQUIRE_DB=true
 ```
 
 Create the database tables with:

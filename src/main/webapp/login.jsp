@@ -1,21 +1,22 @@
-﻿<!doctype html>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Login | E-Sukarelawan</title>
+  <title>Login | E-Volunteer</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=36">
+  <link rel="stylesheet" href="styles.css?v=39">
 </head>
 <body class="auth-page" data-page="login">
   <main class="auth-layout">
     <section class="auth-intro">
-      <a class="brand-link" href="dashboard.html"><span class="brand-mark"></span><span>E-Sukarelawan</span></a>
+      <a class="brand-link" href="dashboard.jsp"><span class="brand-mark"></span><span>E-Volunteer</span></a>
       <div>
         <h1>Welcome To</h1>
-        <h1>E-Sukarelawan</h1>
+        <h1>E-Volunteer</h1>
         <p>Sign in to manage volunteer opportunities, applications, and verified service hours.</p>
       </div>
       <div class="demo-box">
@@ -48,11 +49,14 @@
           </label>
           <button class="btn primary wide" type="submit">Login</button>
         </form>
-        <p class="auth-switch">No account? <a href="register.html">Register here</a></p>
+        <p class="auth-switch">No account? <a href="register.jsp">Register here</a></p>
       </div>
     </section>
   </main>
   <div class="toast" id="toast" role="status"></div>
-  <script src="app.js?v=36"></script>
+  <script src="app.js?v=39"></script>
 </body>
 </html>
+
+
+

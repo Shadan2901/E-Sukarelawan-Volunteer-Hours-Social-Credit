@@ -1,13 +1,14 @@
-﻿<!doctype html>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Opportunities | E-Sukarelawan</title>
+  <title>Opportunities | E-Volunteer</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=36">
+  <link rel="stylesheet" href="styles.css?v=39">
 </head>
 <body data-page="opportunities">
   <div class="app-shell">
@@ -15,11 +16,11 @@
     <main class="workspace">
       <header class="topbar" id="topbar"></header>
       <section class="page-heading split-heading">
-        <div><h1>Volunteer opportunities</h1><p id="opportunityIntro">Browse programmes and apply to volunteer.</p></div>
+        <div><h1>Volunteer opportunities</h1><p id="opportunityIntro">Browse programs and apply to volunteer.</p></div>
         <button class="btn primary admin-only" type="button" id="showOpportunityForm">Create opportunity</button>
       </section>
       <form class="panel form-card admin-only hidden" id="opportunityForm">
-        <div class="panel-head"><div><h2 id="opportunityFormTitle">New opportunity</h2><p>Publish a programme for student volunteers.</p></div></div>
+        <div class="panel-head"><div><h2 id="opportunityFormTitle">New opportunity</h2><p>Publish a program for student volunteers.</p></div></div>
         <div class="panel-body form-grid">
           <label class="field wide">Event name<input id="eventName" name="eventName" required></label>
           <label class="field">NGO<input id="ngoName" name="ngoName" required></label>
@@ -33,7 +34,7 @@
       </form>
       <section class="panel">
         <div class="toolbar">
-          <label class="search"><span>âŒ•</span><input id="globalSearch" type="search" placeholder="Search event, NGO, or location"></label>
+          <label class="search"><span>Search</span><input id="globalSearch" type="search" placeholder="Search event, NGO, or location"></label>
           <div class="filter-group">
             <button class="filter-btn active" data-filter="all" type="button">All</button>
             <button class="filter-btn" data-filter="open" type="button">Open</button>
@@ -47,6 +48,9 @@
     </main>
   </div>
   <div class="toast" id="toast" role="status"></div>
-  <script src="app.js?v=36"></script>
+  <script src="app.js?v=39"></script>
 </body>
 </html>
+
+
+

@@ -31,6 +31,10 @@ public class ESukarelawanApiServlet extends HttpServlet {
             ok(response, stateJson(STORE.state()));
             return;
         }
+        if ("/storage".equals(path(request))) {
+            ok(response, storageJson(STORE.storageMode()));
+            return;
+        }
         notFound(response);
     }
 
@@ -243,6 +247,10 @@ public class ESukarelawanApiServlet extends HttpServlet {
         }
         json.append("]}");
         return json.toString();
+    }
+
+    private static String storageJson(String mode) {
+        return "{\"mode\":\"" + escape(mode) + "\"}";
     }
 
     private static String userJson(User user) {

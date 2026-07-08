@@ -45,6 +45,11 @@ public class JdbcEVolunteerStore implements EVolunteerStore {
         }
     }
 
+    @Override
+    public String storageMode() {
+        return "database";
+    }
+
     private void ensureProfileColumns(Connection connection) throws Exception {
         addColumnIfMissing(connection, "profile_phone", "VARCHAR(40)");
         addColumnIfMissing(connection, "profile_faculty", "VARCHAR(140)");
@@ -247,6 +252,7 @@ public class JdbcEVolunteerStore implements EVolunteerStore {
              PreparedStatement statement = connection.prepareStatement(
                      "INSERT INTO volunteer_hours (student_id, student_name, opportunity_id, activity, amount, status, note, approved_by_admin_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
                      Statement.RETURN_GENERATED_KEYS)) {
+            requireApprovedApplication(connection, record.studentId, record.opportunityId);
             bindHour(statement, record);
             statement.executeUpdate();
             try (ResultSet keys = statement.getGeneratedKeys()) {
@@ -255,6 +261,8 @@ public class JdbcEVolunteerStore implements EVolunteerStore {
                 record.status = "pending";
                 return record;
             }
+        } catch (IllegalArgumentException exception) {
+            throw exception;
         } catch (Exception exception) {
             throw new IllegalStateException("Could not submit hours to database.", exception);
         }
@@ -529,5 +537,17 @@ public class JdbcEVolunteerStore implements EVolunteerStore {
         if (value == null || value.isBlank()) {
             throw new IllegalArgumentException(label + " is required.");
         }
+    }
+
+    private static void requireApprovedApplication(Connection connection, int studentId, int opportunityId) throws Exception {
+        try (PreparedStatement statement = connection.prepareStatement(
+                "SELECT id FROM applications WHERE student_id=? AND opportunity_id=? AND status='approved'")) {
+            statement.setInt(1, studentId);
+            statement.setInt(2, opportunityId);
+            try (ResultSet rs = statement.executeQuery()) {
+                if (rs.next()) return;
+            }
+        }
+        throw new IllegalArgumentException("Your application must be approved before submitting volunteer hours.");
     }
 }

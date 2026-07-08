@@ -26,6 +26,11 @@ public class InMemoryEVolunteerStore implements EVolunteerStore {
     }
 
     @Override
+    public String storageMode() {
+        return "demo";
+    }
+
+    @Override
     public synchronized AppState state() {
         return data;
     }
@@ -127,6 +132,7 @@ public class InMemoryEVolunteerStore implements EVolunteerStore {
 
     @Override
     public synchronized HourRecord submitHours(HourRecord record) {
+        requireApprovedApplication(record.studentId, record.opportunityId);
         record.id = nextHourId();
         record.status = "pending";
         record.approvedByAdminId = null;
@@ -265,6 +271,17 @@ public class InMemoryEVolunteerStore implements EVolunteerStore {
         }
     }
 
+    private void requireApprovedApplication(int studentId, int opportunityId) {
+        for (Application application : data.applications) {
+            if (application.studentId == studentId
+                    && application.opportunityId == opportunityId
+                    && "approved".equals(application.status)) {
+                return;
+            }
+        }
+        throw new IllegalArgumentException("Your application must be approved before submitting volunteer hours.");
+    }
+
     private static User publicUser(User user) {
         User copy = new User();
         copy.id = user.id;
@@ -304,26 +321,26 @@ public class InMemoryEVolunteerStore implements EVolunteerStore {
     }
 
     private void seed() {
-        data.users.add(user(1, "Volunteer Coordinator", "admin@demo.my", "admin", "ADMIN-001", "E-Sukarelawan Admin"));
+        data.users.add(user(1, "Volunteer Coordinator", "admin@demo.my", "admin", "ADMIN-001", "E-Volunteer Admin"));
         data.users.add(user(2, "Aisyah Maisarah", "student@demo.my", "student", "2025427206", null));
         data.users.add(user(3, "Ahmad Shafiq Daniel Bin Salimi", "shafiq@student.my", "student", "2025427207", null));
         data.users.add(user(4, "Nur Adlina Zainal", "adlina@student.my", "student", "2025427208", null));
         data.users.add(user(5, "Muhammad Danish Hakim", "danish@student.my", "student", "2025427209", null));
         data.users.add(user(6, "Farah Nazihah Roslan", "farah@student.my", "student", "2025427210", null));
         data.users.add(user(7, "Haqim Rashid", "haqim@student.my", "student", "2025427211", null));
-        data.users.add(user(8, "E-Sukarelawan Outreach Team", "outreach@demo.my", "admin", "NGO-OUTREACH", "E-Sukarelawan Outreach"));
+        data.users.add(user(8, "E-Volunteer Outreach Team", "outreach@demo.my", "admin", "NGO-OUTREACH", "E-Volunteer Outreach"));
         data.users.add(user(9, "Green Earth Volunteers", "green@demo.my", "admin", "NGO-GREEN", "Green Earth Volunteers"));
 
-        data.opportunities.add(opportunity(1, 1, "Program Pembersihan Sungai Langat", "E-Sukarelawan", "Program komuniti membersihkan kawasan sungai bersama penduduk setempat.", "2025-05-24", 28, "Kajang, Selangor", "open", "Environment"));
-        data.opportunities.add(opportunity(2, 1, "Kelas Tuisyen Komuniti", "E-Sukarelawan", "Bantu pelajar sekolah rendah melalui kelas bimbingan hujung minggu.", "2025-05-31", 16, "Bangi", "open", "Education"));
-        data.opportunities.add(opportunity(3, 1, "Sahabat Warga: Lawatan & Sumbangan", "E-Sukarelawan", "Lawatan sokongan sosial dan penyerahan sumbangan ke pusat jagaan.", "2025-06-07", 10, "Pusat Jagaan Kasih Harmoni, Kajang", "limited", "Community"));
-        data.opportunities.add(opportunity(4, 1, "Dapur Komuniti Ramadan", "E-Sukarelawan", "Menyediakan dan mengagihkan makanan kepada keluarga memerlukan.", "2025-06-14", 0, "Bangi", "closed", "Food Aid"));
-        data.opportunities.add(opportunity(5, 8, "Kempen Derma Darah Komuniti", "E-Sukarelawan Outreach", "Membantu pendaftaran, pengurusan barisan, dan sokongan peserta derma darah.", "2026-08-03", 35, "Dewan Komuniti Shah Alam", "open", "Health"));
-        data.opportunities.add(opportunity(6, 9, "Gotong-Royong Taman Rekreasi", "Green Earth Volunteers", "Membersihkan taman, mengecat bangku awam, dan mengasingkan bahan kitar semula.", "2026-08-10", 24, "Taman Tasik Cyberjaya", "open", "Environment"));
-        data.opportunities.add(opportunity(7, 8, "Bengkel Literasi Digital Warga Emas", "E-Sukarelawan Outreach", "Mengajar asas telefon pintar, keselamatan internet, dan penggunaan aplikasi harian.", "2026-08-17", 18, "Pusat Aktiviti Warga Emas Klang", "limited", "Education"));
-        data.opportunities.add(opportunity(8, 9, "Misi Bantuan Pek Makanan", "Green Earth Volunteers", "Menyusun dan mengagihkan pek makanan kepada keluarga memerlukan.", "2026-08-24", 30, "Pusat Komuniti Puchong", "open", "Food Aid"));
-        data.opportunities.add(opportunity(9, 1, "Larian Amal Sukarelawan", "E-Sukarelawan", "Membantu kaunter pendaftaran, kawalan laluan, dan stesen minuman peserta.", "2026-09-06", 40, "Stadium UiTM Shah Alam", "open", "Sports"));
-        data.opportunities.add(opportunity(10, 8, "Kelas Bimbingan SPM Hujung Minggu", "E-Sukarelawan Outreach", "Membantu pelajar sekolah menengah dengan latihan Matematik dan Bahasa Inggeris.", "2026-09-13", 20, "Perpustakaan Komuniti Subang", "open", "Education"));
+        data.opportunities.add(opportunity(1, 1, "Langat River Cleanup", "E-Volunteer", "A community program to clean the river area with local residents.", "2025-05-24", 28, "Kajang, Selangor", "open", "Environment"));
+        data.opportunities.add(opportunity(2, 1, "Community Tuition Class", "E-Volunteer", "Support primary school pupils through weekend guidance classes.", "2025-05-31", 16, "Bangi", "open", "Education"));
+        data.opportunities.add(opportunity(3, 1, "Senior Care Visit and Donation Drive", "E-Volunteer", "Social support visit and donation handover at a care center.", "2025-06-07", 10, "Kasih Harmoni Care Centre, Kajang", "limited", "Community"));
+        data.opportunities.add(opportunity(4, 1, "Ramadan Community Kitchen", "E-Volunteer", "Prepare and distribute meals to families in need.", "2025-06-14", 0, "Bangi", "closed", "Food Aid"));
+        data.opportunities.add(opportunity(5, 8, "Community Blood Donation Campaign", "E-Volunteer Outreach", "Assist registration, queue management, and participant support for blood donors.", "2026-08-03", 35, "Shah Alam Community Hall", "open", "Health"));
+        data.opportunities.add(opportunity(6, 9, "Recreational Park Cleanup", "Green Earth Volunteers", "Clean the park, repaint public benches, and sort recyclable materials.", "2026-08-10", 24, "Cyberjaya Lake Park", "open", "Environment"));
+        data.opportunities.add(opportunity(7, 8, "Senior Digital Literacy Workshop", "E-Volunteer Outreach", "Teach smartphone basics, internet safety, and everyday app usage.", "2026-08-17", 18, "Klang Senior Activity Centre", "limited", "Education"));
+        data.opportunities.add(opportunity(8, 9, "Food Pack Relief Mission", "Green Earth Volunteers", "Organize and distribute food packs to families in need.", "2026-08-24", 30, "Puchong Community Centre", "open", "Food Aid"));
+        data.opportunities.add(opportunity(9, 1, "Volunteer Charity Run", "E-Volunteer", "Assist registration counters, route control, and participant water stations.", "2026-09-06", 40, "Stadium UiTM Shah Alam", "open", "Sports"));
+        data.opportunities.add(opportunity(10, 8, "Weekend SPM Coaching Class", "E-Volunteer Outreach", "Support secondary school students with Mathematics and English practice.", "2026-09-13", 20, "Subang Community Library", "open", "Education"));
 
         data.applications.add(application(1, 2, 1, "2025-05-18", "approved", 1, "2025-05-18"));
         data.applications.add(application(2, 2, 2, "2025-05-20", "approved", 1, "2025-05-20"));
@@ -338,26 +355,26 @@ public class InMemoryEVolunteerStore implements EVolunteerStore {
         data.applications.add(application(11, 6, 10, "2026-07-19", "pending", null, null));
         data.applications.add(application(12, 7, 8, "2026-07-20", "approved", 9, "2026-07-21"));
 
-        data.hours.add(hour(1, 2, null, 1, "Program Pembersihan Sungai Langat", 84.5, "approved", "Attendance verified by programme coordinator", 1));
-        data.hours.add(hour(2, 2, null, 2, "Kelas Tuisyen Komuniti", 36, "approved", "Teaching log completed", 1));
-        data.hours.add(hour(3, 2, null, 3, "Sahabat Warga: Lawatan & Sumbangan", 2, "pending", "Reflection pending review", null));
-        data.hours.add(hour(4, 3, null, 5, "Kempen Derma Darah Komuniti", 6, "approved", "Registration counter and donor flow completed", 8));
-        data.hours.add(hour(5, 3, null, 6, "Gotong-Royong Taman Rekreasi", 4.5, "pending", "Awaiting NGO confirmation", null));
-        data.hours.add(hour(6, 4, null, 5, "Kempen Derma Darah Komuniti", 5, "approved", "Helped manage donor waiting area", 8));
-        data.hours.add(hour(7, 4, null, 7, "Bengkel Literasi Digital Warga Emas", 3, "pending", "Submitted reflection form", null));
-        data.hours.add(hour(8, 5, null, 8, "Misi Bantuan Pek Makanan", 7.5, "approved", "Packed and distributed food aid", 9));
-        data.hours.add(hour(9, 5, null, 9, "Larian Amal Sukarelawan", 6, "approved", "Route marshal duty completed", 1));
-        data.hours.add(hour(10, 6, null, 6, "Gotong-Royong Taman Rekreasi", 5.5, "approved", "Recycling station and cleanup duty", 9));
-        data.hours.add(hour(11, 6, null, 10, "Kelas Bimbingan SPM Hujung Minggu", 2, "pending", "Pending tutor attendance check", null));
-        data.hours.add(hour(12, 7, null, 8, "Misi Bantuan Pek Makanan", 4, "approved", "Inventory and packing support", 9));
-        data.hours.add(hour(13, 0, "Arif Hakimi", 3, "Sahabat Warga: Lawatan & Sumbangan", 5.5, "pending", "10 May 2025", null));
-        data.hours.add(hour(14, 0, "Siti Hajar", 7, "Bengkel Literasi Digital Warga Emas", 3.5, "pending", "Manual entry by admin", null));
+        data.hours.add(hour(1, 2, null, 1, "Langat River Cleanup", 84.5, "approved", "Attendance verified by program coordinator", 1));
+        data.hours.add(hour(2, 2, null, 2, "Community Tuition Class", 36, "approved", "Teaching log completed", 1));
+        data.hours.add(hour(3, 2, null, 1, "Langat River Cleanup", 2, "pending", "Additional reflection pending review", null));
+        data.hours.add(hour(4, 3, null, 5, "Community Blood Donation Campaign", 6, "approved", "Registration counter and donor flow completed", 8));
+        data.hours.add(hour(5, 3, null, 5, "Community Blood Donation Campaign", 4.5, "pending", "Additional donor support pending review", null));
+        data.hours.add(hour(6, 4, null, 5, "Community Blood Donation Campaign", 5, "approved", "Helped manage donor waiting area", 8));
+        data.hours.add(hour(7, 4, null, 5, "Community Blood Donation Campaign", 3, "pending", "Submitted reflection form", null));
+        data.hours.add(hour(8, 5, null, 8, "Food Pack Relief Mission", 7.5, "approved", "Packed and distributed food aid", 9));
+        data.hours.add(hour(9, 5, null, 9, "Volunteer Charity Run", 6, "approved", "Route marshal duty completed", 1));
+        data.hours.add(hour(10, 6, null, 6, "Recreational Park Cleanup", 5.5, "approved", "Recycling station and cleanup duty", 9));
+        data.hours.add(hour(11, 6, null, 6, "Recreational Park Cleanup", 2, "pending", "Pending attendance check", null));
+        data.hours.add(hour(12, 7, null, 8, "Food Pack Relief Mission", 4, "approved", "Inventory and packing support", 9));
+        data.hours.add(hour(13, 0, "Arif Hakimi", 3, "Senior Care Visit and Donation Drive", 5.5, "pending", "10 May 2025", null));
+        data.hours.add(hour(14, 0, "Siti Hajar", 7, "Senior Digital Literacy Workshop", 3.5, "pending", "Manual entry by admin", null));
 
-        data.feedback.add(feedback(1, 2, "Certificate request", "Can I get a certificate for the river cleanup programme?", "replied", "2026-07-01T09:30:00", 1, "Yes, the certificate will be available in your profile after final verification.", "2026-07-01T14:15:00"));
+        data.feedback.add(feedback(1, 2, "Certificate request", "Can I get a certificate for the river cleanup program?", "replied", "2026-07-01T09:30:00", 1, "Yes, the certificate will be available in your profile after final verification.", "2026-07-01T14:15:00"));
         data.feedback.add(feedback(2, 3, "Unable to edit profile picture", "My profile picture upload took a long time. Can admin check if it saved?", "replied", "2026-07-02T10:20:00", 1, "Your latest profile picture has been saved successfully.", "2026-07-02T12:10:00"));
         data.feedback.add(feedback(3, 4, "Opportunity location detail", "Please add the exact hall name for the blood donation campaign.", "open", "2026-07-03T11:05:00", null, null, null));
         data.feedback.add(feedback(4, 5, "Volunteer hours pending", "My food aid hours are still pending after the event.", "replied", "2026-07-04T15:45:00", 9, "The hours have been reviewed and approved. Thank you for volunteering.", "2026-07-04T17:30:00"));
-        data.feedback.add(feedback(5, 6, "New programme suggestion", "Can we add a beach cleanup programme next month?", "open", "2026-07-05T08:50:00", null, null, null));
+        data.feedback.add(feedback(5, 6, "New program suggestion", "Can we add a beach cleanup program next month?", "open", "2026-07-05T08:50:00", null, null, null));
     }
 
     private User user(int id, String fullName, String email, String role, String referenceId, String ngoName) {

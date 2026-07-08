@@ -1,13 +1,14 @@
-﻿<!doctype html>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Profile | E-Sukarelawan</title>
+  <title>Profile | E-Volunteer</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=36">
+  <link rel="stylesheet" href="styles.css?v=39">
 </head>
 <body data-page="profile">
   <div class="app-shell">
@@ -20,7 +21,7 @@
           <h1>Profile studio</h1>
           <p>Manage your volunteer identity in a movie-style profile format.</p>
         </div>
-        <a class="btn secondary" href="dashboard.html">Back to dashboard</a>
+        <a class="btn secondary" href="dashboard.jsp">Back to dashboard</a>
       </section>
 
       <section class="profile-grid movie-profile-grid">
@@ -45,7 +46,7 @@
               <div><small>Rating</small><strong id="profileSummaryRank">-</strong><span>Student rank</span></div>
             </div>
             <div class="profile-story">
-              <strong>Synopsis</strong>
+              <strong>Bio</strong>
               <p id="profileSynopsis">Add your volunteer profile summary.</p>
             </div>
           </div>
@@ -78,8 +79,8 @@
             <label class="field">Faculty
               <input id="profileFaculty" placeholder="Faculty / department">
             </label>
-            <label class="field wide">Programme
-              <input id="profileProgramme" placeholder="Course, programme, or club">
+            <label class="field wide">Program
+              <input id="profileProgramme" placeholder="Course, program, or club">
             </label>
             <label class="field wide">About me
               <textarea id="profileBio" placeholder="Short volunteer profile"></textarea>
@@ -95,6 +96,9 @@
   </div>
 
   <div class="toast" id="toast" role="status"></div>
-  <script src="app.js?v=36"></script>
+  <script src="app.js?v=39"></script>
 </body>
 </html>
+
+
+

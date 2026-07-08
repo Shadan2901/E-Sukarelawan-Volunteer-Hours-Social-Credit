@@ -1,13 +1,14 @@
-﻿<!doctype html>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Leaderboard | E-Sukarelawan</title>
+  <title>Leaderboard | E-Volunteer</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=36">
+  <link rel="stylesheet" href="styles.css?v=39">
 </head>
 <body data-page="leaderboard">
   <div class="app-shell">
@@ -25,6 +26,9 @@
     </main>
   </div>
   <div class="toast" id="toast" role="status"></div>
-  <script src="app.js?v=36"></script>
+  <script src="app.js?v=39"></script>
 </body>
 </html>
+
+
+

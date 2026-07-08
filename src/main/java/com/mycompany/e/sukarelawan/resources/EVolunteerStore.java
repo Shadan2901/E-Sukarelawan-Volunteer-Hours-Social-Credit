@@ -13,6 +13,7 @@ import com.mycompany.e.sukarelawan.resources.ApiModels.RegisterRequest;
 import com.mycompany.e.sukarelawan.resources.ApiModels.User;
 
 public interface EVolunteerStore {
+    String storageMode();
     AppState state();
     User login(LoginRequest request);
     User register(RegisterRequest request);

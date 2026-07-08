@@ -1,15 +1,16 @@
-﻿<!doctype html>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Dashboard | E-Sukarelawan</title>
+  <title>Dashboard | E-Volunteer</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="styles.css?v=36">
+  <link rel="stylesheet" href="styles.css?v=39">
 </head>
 
 <body data-page="dashboard">
@@ -25,12 +26,12 @@
           <div class="hero-badge">Enterprise Volunteer Management Platform</div>
           <h1>Dashboard</h1>
           <p id="dashboardGreeting">
-            Monitor volunteer activities, verified hours, applications, and programme performance in one intelligent workspace.
+            Monitor volunteer activities, verified hours, applications, and program performance in one intelligent workspace.
           </p>
 
           <div class="hero-actions">
-            <a href="opportunities.html" class="btn-primary">Explore Opportunities</a>
-            <a href="hours.html" class="btn-secondary">View My Hours</a>
+            <a href="opportunities.jsp" class="btn-primary">Explore Opportunities</a>
+            <a href="hours.jsp" class="btn-secondary">View My Hours</a>
           </div>
         </div>
 
@@ -66,7 +67,7 @@
       <!-- METRICS -->
       <section class="metrics advanced-metrics">
         <article class="metric metric-shield">
-          <div class="metric-icon">âœ“</div>
+          <div class="metric-icon">OK</div>
           <div>
             <span>Verified Hours</span>
             <strong id="metricHours">0</strong>
@@ -75,7 +76,7 @@
         </article>
 
         <article class="metric metric-calendar">
-          <div class="metric-icon">ðŸ“…</div>
+          <div class="metric-icon">EV</div>
           <div>
             <span>Active Events</span>
             <strong id="metricEvents">0</strong>
@@ -84,7 +85,7 @@
         </article>
 
         <article class="metric metric-clock">
-          <div class="metric-icon">â³</div>
+          <div class="metric-icon">RV</div>
           <div>
             <span>Pending Review</span>
             <strong id="metricPending">0</strong>
@@ -93,10 +94,10 @@
         </article>
 
         <article class="metric metric-trophy">
-          <div class="metric-icon">ðŸ†</div>
+          <div class="metric-icon">#</div>
           <div>
             <span>Student Rank</span>
-            <strong id="metricRank">â€”</strong>
+            <strong id="metricRank">-</strong>
             <small>By verified hours</small>
           </div>
         </article>
@@ -105,10 +106,10 @@
       <!-- BUSINESS VALUE SECTION -->
       <section class="business-grid">
         <article class="business-card premium-card">
-          <div class="card-label">Why companies choose E-Sukarelawan</div>
-          <h2>Centralised volunteer data with real-time monitoring</h2>
+          <div class="card-label">Why companies choose E-Volunteer</div>
+          <h2>Centralized volunteer data with real-time monitoring</h2>
           <p>
-            E-Sukarelawan helps organisations manage student volunteers, activity approvals,
+            E-Volunteer helps organisations manage student volunteers, activity approvals,
             attendance records, reflections, and verified contribution hours through a structured digital platform.
           </p>
 
@@ -155,9 +156,9 @@
             <div>
               <span class="section-tag">Opportunities</span>
               <h2>Upcoming Opportunities</h2>
-              <p>Programmes that still need volunteers.</p>
+              <p>Programs that still need volunteers.</p>
             </div>
-            <a href="opportunities.html">View All</a>
+            <a href="opportunities.jsp">View All</a>
           </div>
 
           <div class="panel-body activity-list" id="dispatchList"></div>
@@ -180,7 +181,7 @@
       <section class="trust-section">
         <article>
           <h3>Audit-ready records</h3>
-          <p>Every activity record can be reviewed, verified, and organised for reporting purposes.</p>
+          <p>Every activity record can be reviewed, verified, and organized for reporting purposes.</p>
         </article>
 
         <article>
@@ -190,7 +191,7 @@
 
         <article>
           <h3>Management insight</h3>
-          <p>Administrators can understand programme performance and approval status faster.</p>
+          <p>Administrators can understand program performance and approval status faster.</p>
         </article>
       </section>
 
@@ -199,10 +200,10 @@
         <div class="announcement-icon">!</div>
 
         <div>
-          <h2>Pengumuman</h2>
+          <h2>Announcement</h2>
           <p>
-            Sila pastikan semua rekod kehadiran dan refleksi dimuat naik selewat-lewatnya
-            3 hari selepas aktiviti.
+            Please upload all attendance records and reflections no later than
+            3 days after each activity.
           </p>
         </div>
 
@@ -213,6 +214,9 @@
 
   <div class="toast" id="toast" role="status"></div>
 
-  <script src="app.js?v=36"></script>
+  <script src="app.js?v=39"></script>
 </body>
 </html>
+
+
+

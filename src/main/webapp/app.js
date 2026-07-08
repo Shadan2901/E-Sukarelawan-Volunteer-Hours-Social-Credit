@@ -4,7 +4,7 @@ const SESSION_KEY = "eSukarelawanSessionV1";
 const UNIVERSITY_SESSION_KEY = "eSukarelawanUniversityHintV1";
 const THEME_KEY = "eSukarelawanThemeV1";
 const SIDEBAR_KEY = "eSukarelawanSidebarCollapsedV1";
-const WINDOW_STATE_PREFIX = "ESUKARELAWAN:";
+const WINDOW_STATE_PREFIX = "EVOLUNTEER:";
 const pageName = document.body.dataset.page || "entry";
 const API_BASE = `${window.location.origin}${contextPath()}/resources/api`;
 
@@ -18,7 +18,7 @@ const seedState = {
       passwordHash: "ef797c8118f02dfb649607dd5d3f8c7623048c9c063d532cc95c5ed7a898a64f",
       role: "admin",
       referenceId: "UKM-ADMIN",
-      ngoName: "Universiti Kebangsaan Malaysia"
+      ngoName: "National University of Malaysia"
     },
     {
       id: 2,
@@ -30,10 +30,10 @@ const seedState = {
     }
   ],
   opportunities: [
-    { id: 1, adminId: 1, event: "Program Pembersihan Sungai Langat", ngo: "UKM Sukarelawan", description: "Program komuniti membersihkan kawasan sungai bersama penduduk setempat.", date: "2025-05-24", seats: 28, location: "Kajang, Selangor", status: "open", category: "Environment" },
-    { id: 2, adminId: 1, event: "Kelas Tuisyen Komuniti", ngo: "UKM Bakti Siswa", description: "Bantu pelajar sekolah rendah melalui kelas bimbingan hujung minggu.", date: "2025-05-31", seats: 16, location: "UKM, Bangi", status: "open", category: "Education" },
-    { id: 3, adminId: 1, event: "Sahabat Warga: Lawatan & Sumbangan", ngo: "Kelab Kebajikan UKM", description: "Lawatan sokongan sosial dan penyerahan sumbangan ke pusat jagaan.", date: "2025-06-07", seats: 10, location: "Pusat Jagaan Kasih Harmoni, Kajang", status: "limited", category: "Community" },
-    { id: 4, adminId: 1, event: "Dapur Komuniti Ramadan", ngo: "Sukarelawan Mahasiswa", description: "Menyediakan dan mengagihkan makanan kepada keluarga memerlukan.", date: "2025-06-14", seats: 0, location: "Bangi", status: "closed", category: "Food Aid" }
+    { id: 1, adminId: 1, event: "Langat River Cleanup", ngo: "UKM Volunteers", description: "A community program to clean the river area with local residents.", date: "2025-05-24", seats: 28, location: "Kajang, Selangor", status: "open", category: "Environment" },
+    { id: 2, adminId: 1, event: "Community Tuition Class", ngo: "UKM Student Service", description: "Support primary school pupils through weekend guidance classes.", date: "2025-05-31", seats: 16, location: "UKM, Bangi", status: "open", category: "Education" },
+    { id: 3, adminId: 1, event: "Senior Care Visit and Donation Drive", ngo: "UKM Welfare Club", description: "Social support visit and donation handover at a care center.", date: "2025-06-07", seats: 10, location: "Kasih Harmoni Care Centre, Kajang", status: "limited", category: "Community" },
+    { id: 4, adminId: 1, event: "Ramadan Community Kitchen", ngo: "Student Volunteers", description: "Prepare and distribute meals to families in need.", date: "2025-06-14", seats: 0, location: "Bangi", status: "closed", category: "Food Aid" }
   ],
   applications: [
     { id: 1, studentId: 2, opportunityId: 1, applicationDate: "2025-05-18", status: "approved" },
@@ -41,14 +41,14 @@ const seedState = {
     { id: 3, studentId: 2, opportunityId: 3, applicationDate: "2025-05-21", status: "pending" }
   ],
   hours: [
-    { id: 1, studentId: 2, opportunityId: 1, activity: "Program Pembersihan Sungai Langat", amount: 84.5, status: "approved", note: "Attendance verified by programme coordinator", approvedByAdminId: 1 },
-    { id: 2, studentId: 2, opportunityId: 2, activity: "Kelas Tuisyen Komuniti", amount: 36, status: "approved", note: "Teaching log completed", approvedByAdminId: 1 },
-    { id: 3, studentId: 2, opportunityId: 3, activity: "Sahabat Warga: Lawatan & Sumbangan", amount: 2, status: "pending", note: "Reflection pending review", approvedByAdminId: null },
-    { id: 4, studentName: "Muhammad Danish", opportunityId: 1, activity: "Program Pembersihan Sungai Langat", amount: 6, status: "pending", note: "18 May 2025", approvedByAdminId: null },
-    { id: 5, studentName: "Nur Adlina", opportunityId: 2, activity: "Kelas Tuisyen Komuniti", amount: 4, status: "pending", note: "11 May 2025", approvedByAdminId: null },
-    { id: 6, studentName: "Arif Hakimi", opportunityId: 3, activity: "Sahabat Warga: Lawatan & Sumbangan", amount: 5.5, status: "pending", note: "10 May 2025", approvedByAdminId: null },
-    { id: 7, studentName: "Farah Nazihah", opportunityId: 1, activity: "Program Pembersihan Sungai Langat", amount: 6, status: "approved", note: "4 May 2025", approvedByAdminId: 1 },
-    { id: 8, studentName: "Haqim Rashid", opportunityId: 2, activity: "Kelas Tuisyen Komuniti", amount: 3, status: "approved", note: "3 May 2025", approvedByAdminId: 1 }
+    { id: 1, studentId: 2, opportunityId: 1, activity: "Langat River Cleanup", amount: 84.5, status: "approved", note: "Attendance verified by program coordinator", approvedByAdminId: 1 },
+    { id: 2, studentId: 2, opportunityId: 2, activity: "Community Tuition Class", amount: 36, status: "approved", note: "Teaching log completed", approvedByAdminId: 1 },
+    { id: 3, studentId: 2, opportunityId: 1, activity: "Langat River Cleanup", amount: 2, status: "pending", note: "Additional reflection pending review", approvedByAdminId: null },
+    { id: 4, studentName: "Muhammad Danish", opportunityId: 1, activity: "Langat River Cleanup", amount: 6, status: "pending", note: "18 May 2025", approvedByAdminId: null },
+    { id: 5, studentName: "Nur Adlina", opportunityId: 2, activity: "Community Tuition Class", amount: 4, status: "pending", note: "11 May 2025", approvedByAdminId: null },
+    { id: 6, studentName: "Arif Hakimi", opportunityId: 3, activity: "Senior Care Visit and Donation Drive", amount: 5.5, status: "pending", note: "10 May 2025", approvedByAdminId: null },
+    { id: 7, studentName: "Farah Nazihah", opportunityId: 1, activity: "Langat River Cleanup", amount: 6, status: "approved", note: "4 May 2025", approvedByAdminId: 1 },
+    { id: 8, studentName: "Haqim Rashid", opportunityId: 2, activity: "Community Tuition Class", amount: 3, status: "approved", note: "3 May 2025", approvedByAdminId: 1 }
   ],
   feedback: [
     {
@@ -76,7 +76,7 @@ let dataSource = null;
 function contextPath() {
   const parts = window.location.pathname.split("/").filter(Boolean);
   if (!parts.length || window.location.protocol === "file:") return "";
-  return parts[0].includes(".html") ? "" : `/${parts[0]}`;
+  return /\.[a-z0-9]+$/i.test(parts[0]) ? "" : `/${parts[0]}`;
 }
 
 function clone(value) {
@@ -132,26 +132,26 @@ function categoryClass(category = "") {
 const universityRules = [
   {
     code: "UKM",
-    name: "Universiti Kebangsaan Malaysia",
-    motto: "ILMU, MUTU DAN BUDI",
-    tests: [/^A\d{5,}$/i, /^UKM/i, /UKM/i, /Kebangsaan/i]
+    name: "National University of Malaysia",
+    motto: "Knowledge, Quality and Character",
+    tests: [/^A\d{5,}$/i, /^UKM/i, /UKM/i, /National/i]
   },
   {
     code: "UiTM",
-    name: "Universiti Teknologi MARA",
-    motto: "USAHA, TAQWA, MULIA",
-    tests: [/^UITM/i, /^20\d{5,}$/i, /Teknologi MARA/i, /MARA/i]
+    name: "MARA Technological University",
+    motto: "Effort, Faith, Excellence",
+    tests: [/^UITM/i, /^20\d{5,}$/i, /MARA Technological/i, /MARA/i]
   },
   {
     code: "UM",
-    name: "Universiti Malaya",
-    motto: "ILMU PUNCA KEMAJUAN",
+    name: "University of Malaya",
+    motto: "Knowledge is the Source of Progress",
     tests: [/^UM/i, /Malaya/i]
   },
   {
     code: "UPM",
-    name: "Universiti Putra Malaysia",
-    motto: "BERILMU BERBAKTI",
+    name: "Putra University Malaysia",
+    motto: "Knowledge in Service",
     tests: [/^UPM/i, /Putra/i]
   }
 ];
@@ -172,7 +172,7 @@ function universityForUser(user) {
   if (detected && detected.code !== "UNI") return detected;
   return {
     code: "ES",
-    name: "E-Sukarelawan",
+    name: "E-Volunteer",
     motto: "Volunteer management platform"
   };
 }
@@ -197,11 +197,19 @@ function opportunityTime(item) {
     Environment: "",
     "Food Aid": "10:00 AM"
   };
-  return slots[item.category] ? `${formatDate(item.date)} · ${slots[item.category]}` : formatDate(item.date);
+  return slots[item.category] ? `${formatDate(item.date)} - ${slots[item.category]}` : formatDate(item.date);
 }
 
 function userName(studentId, fallback = "Volunteer") {
   return state.users.find(user => user.id === studentId)?.fullName || fallback;
+}
+
+function approvedApplicationFor(studentId, opportunityId) {
+  return state.applications.find(item =>
+    Number(item.studentId) === Number(studentId)
+    && Number(item.opportunityId) === Number(opportunityId)
+    && item.status === "approved"
+  );
 }
 
 function displayNameForUser(user) {
@@ -209,7 +217,7 @@ function displayNameForUser(user) {
   if (user.role !== "admin") return user.fullName || "User";
   const cleaned = String(user.fullName || "")
     .replace(/\b(UKM|UiTM|UM|UPM)\b/gi, "")
-    .replace(/\bUniversiti\s+(Kebangsaan|Teknologi MARA|Malaya|Putra)\s+Malaysia\b/gi, "")
+    .replace(/\b(National University of Malaysia|MARA Technological University|University of Malaya|Putra University Malaysia)\b/gi, "")
     .replace(/\s+/g, " ")
     .trim();
   return cleaned || "Admin Coordinator";
@@ -414,6 +422,9 @@ class LocalDataSource {
   }
 
   async submitHours(payload) {
+    if (!approvedApplicationFor(payload.studentId, payload.opportunityId)) {
+      throw new Error("Your application must be approved before submitting volunteer hours.");
+    }
     state.hours.unshift({ id: nextId(state.hours), status: "pending", approvedByAdminId: null, ...payload });
     this.save();
   }
@@ -481,6 +492,12 @@ class ApiDataSource extends LocalDataSource {
 
   async init() {
     const sessionUserId = Number(sessionStorage.getItem(SESSION_KEY)) || null;
+    try {
+      const storage = await apiFetch("/storage");
+      this.mode = storage?.mode === "database" ? "database" : "api";
+    } catch {
+      this.mode = "api";
+    }
     const serverState = await apiFetch("/state");
     state = { ...serverState, sessionUserId };
   }
@@ -612,6 +629,12 @@ async function chooseDataSource() {
   return local;
 }
 
+function connectionLabel() {
+  if (dataSource?.mode === "database") return "Database connected";
+  if (dataSource?.mode === "api") return "Server connected";
+  return "Demo mode";
+}
+
 function currentUser() {
   return state.users.find(user => user.id === state.sessionUserId) || null;
 }
@@ -619,7 +642,7 @@ function currentUser() {
 function protectPage() {
   const protectedPages = ["dashboard", "opportunities", "hours", "leaderboard", "profile"];
   if (protectedPages.includes(pageName) && !currentUser()) {
-    go("login.html");
+    go("login.jsp");
     return false;
   }
   return true;
@@ -641,16 +664,16 @@ function renderShell() {
   const displayName = displayNameForUser(user);
 
   const links = [
-    ["dashboard", "dashboard.html", "🏠", "Dashboard"],
-    ["opportunities", "opportunities.html", "🤝", "Opportunities"],
-    ["hours", "hours.html", "⏱️", "Volunteer hours"],
-    ["leaderboard", "leaderboard.html", "🏆", "Leaderboard"]
+    ["dashboard", "dashboard.jsp", "\uD83C\uDFE0", "Dashboard"],
+    ["opportunities", "opportunities.jsp", "\uD83E\uDD1D", "Opportunities"],
+    ["hours", "hours.jsp", "\u23F1\uFE0F", "Volunteer hours"],
+    ["leaderboard", "leaderboard.jsp", "\uD83C\uDFC6", "Leaderboard"]
   ];
 
   sidebar.innerHTML = `
     <div class="side-brand">
       <span class="brand-mark"></span>
-      <div><strong>E-Sukarelawan</strong><span>Hero Kebersihan</span></div>
+      <div><strong>E-Volunteer</strong><span>Community Service Hub</span></div>
     </div>
     <nav class="side-nav">
       ${links.map(([page, href, icon, label]) => `
@@ -666,7 +689,7 @@ function renderShell() {
   `;
 
   topbar.innerHTML = `
-    <div class="system-state">${dataSource.mode === "api" ? "Server connected" : "Demo mode"}</div>
+    <div class="system-state">${connectionLabel()}</div>
     <div class="top-profile">
       <div class="avatar">${initials(user.fullName)}</div>
       <div class="profile-copy"><strong>${escapeHtml(user.fullName)}</strong><span>${escapeHtml(user.email)}</span></div>
@@ -675,7 +698,7 @@ function renderShell() {
   `;
   document.querySelector("#logoutBtn").addEventListener("click", async () => {
     await dataSource.logout();
-    go("login.html");
+    go("login.jsp");
   });
   setupSidebarToggle();
 }
@@ -689,18 +712,18 @@ function renderShell() {
   const isStudent = user.role === "student";
 
   const links = [
-    ["dashboard", "dashboard.html", "🏠", "Dashboard"],
-    ["opportunities", "opportunities.html", "🤝", "Volunteer opportunities"],
-    ["hours", "hours.html", "⏱️", "Volunteer hours"],
-    ["leaderboard", "leaderboard.html", "🏆", "Leaderboard"],
-    ["feedback", "feedback.html", "💬", "Feedback"],
-    ["profile", "profile.html", "👤", "Profile"]
+    ["dashboard", "dashboard.jsp", "\uD83C\uDFE0", "Dashboard"],
+    ["opportunities", "opportunities.jsp", "\uD83E\uDD1D", "Volunteer opportunities"],
+    ["hours", "hours.jsp", "\u23F1\uFE0F", "Volunteer hours"],
+    ["leaderboard", "leaderboard.jsp", "\uD83C\uDFC6", "Leaderboard"],
+    ["feedback", "feedback.jsp", "\uD83D\uDCAC", "Feedback"],
+    ["profile", "profile.jsp", "\uD83D\uDC64", "Profile"]
   ];
 
   sidebar.innerHTML = `
     <div class="side-brand">
       <span class="brand-mark"></span>
-      <div><strong>E-Sukarelawan</strong><span>Sukarelawan, Masyarakat Berdaya</span></div>
+      <div><strong>E-Volunteer</strong><span>Volunteers, Empowered Communities</span></div>
     </div>
     <nav class="side-nav">
       ${links.map(([page, href, icon, label]) => `
@@ -722,11 +745,11 @@ function renderShell() {
   `;
 
   topbar.innerHTML = `
-    <div class="system-state">${dataSource.mode === "api" ? "Server connected" : "Demo mode"}</div>
+    <div class="system-state">${connectionLabel()}</div>
     <button class="bell-btn theme-toggle" type="button" id="themeToggleBtn" aria-label="Switch to dark theme" aria-pressed="false">
       <span class="theme-glyph">D</span><span class="theme-dot"></span>
     </button>
-    <a class="top-profile" href="profile.html" aria-label="Open profile page">
+    <a class="top-profile" href="profile.jsp" aria-label="Open profile page">
       ${avatarMarkup({ ...user, fullName: displayName })}
       <div class="profile-copy"><strong>${escapeHtml(displayName)}</strong><span>${isStudent ? `Student - ${escapeHtml(university.code)}` : "Coordinator"}</span></div>
     </a>
@@ -736,7 +759,7 @@ function renderShell() {
   document.querySelector("#themeToggleBtn")?.addEventListener("click", toggleTheme);
   document.querySelector("#logoutBtn").addEventListener("click", async () => {
     await dataSource.logout();
-    go("login.html");
+    go("login.jsp");
   });
   setupSidebarToggle();
 }
@@ -746,7 +769,7 @@ function renderDashboard() {
   if (!user) return;
 
   document.querySelector("#dashboardGreeting").textContent = user.role === "admin"
-    ? "Monitor programmes, participation and submitted service hours."
+    ? "Monitor programs, participation and submitted service hours."
     : "Track your applications, approved hours and current contribution rank.";
 
   const relevantHours = user.role === "student"
@@ -762,14 +785,14 @@ function renderDashboard() {
   document.querySelector("#metricHours").textContent = verifiedHours;
   document.querySelector("#metricEvents").textContent = activeEvents;
   document.querySelector("#metricPending").textContent = pendingHours;
-  document.querySelector("#metricRank").textContent = rank ? `#${rank}` : "—";
+  document.querySelector("#metricRank").textContent = rank ? `#${rank}` : "-";
 
   document.querySelector("#dispatchList").innerHTML = state.opportunities
     .filter(item => item.status !== "closed")
     .slice(0, 4)
     .map(item => `
       <div class="activity-row">
-        <div><strong>${escapeHtml(item.event)}</strong><span>${escapeHtml(item.location)} · ${formatDate(item.date)}</span></div>
+        <div><strong>${escapeHtml(item.event)}</strong><span>${escapeHtml(item.location)} - ${formatDate(item.date)}</span></div>
         <span class="tag ${item.status}">${escapeHtml(item.status)}</span>
       </div>
     `).join("") || `<div class="empty">No active opportunities.</div>`;
@@ -784,7 +807,7 @@ function renderDashboard() {
     const pending = state.hours.filter(item => item.status === "pending");
     queueList.innerHTML = pending.map(item => `
       <div class="activity-row">
-        <div><strong>${escapeHtml(userName(item.studentId, item.studentName))}</strong><span>${escapeHtml(item.activity)} · ${item.amount} hours</span></div>
+        <div><strong>${escapeHtml(userName(item.studentId, item.studentName))}</strong><span>${escapeHtml(item.activity)} - ${item.amount} hours</span></div>
         <span class="tag pending">Pending</span>
       </div>
     `).join("") || `<div class="empty">Nothing needs review.</div>`;
@@ -797,7 +820,7 @@ function renderDashboard() {
       if (!opportunity) return "";
       return `
         <div class="activity-row">
-          <div><strong>${escapeHtml(opportunity.event)}</strong><span>${escapeHtml(opportunity.ngo)} · ${formatDate(opportunity.date)}</span></div>
+          <div><strong>${escapeHtml(opportunity.event)}</strong><span>${escapeHtml(opportunity.ngo)} - ${formatDate(opportunity.date)}</span></div>
           <span class="tag ${application.status}">${escapeHtml(application.status)}</span>
         </div>
       `;
@@ -823,8 +846,8 @@ function renderOpportunities() {
   if (!user || !list) return;
 
   document.querySelector("#opportunityIntro").textContent = user.role === "admin"
-    ? "Create and manage programmes for student volunteers."
-    : "Browse programmes and apply to volunteer.";
+    ? "Create and manage programs for student volunteers."
+    : "Browse programs and apply to volunteer.";
   document.querySelector("#resultCount").textContent = `${items.length} ${items.length === 1 ? "result" : "results"}`;
 
   list.innerHTML = items.length ? items.map(item => {
@@ -839,7 +862,7 @@ function renderOpportunities() {
         : `<button class="btn primary" data-action="apply" data-id="${item.id}" type="button" ${item.status === "closed" ? "disabled" : ""}>Apply</button>`;
     return `
       <article class="opportunity-row">
-        <div><h3>${escapeHtml(item.event)}</h3><p>${escapeHtml(item.category)} · ${escapeHtml(item.location)}</p><p>${escapeHtml(item.description)}</p></div>
+        <div><h3>${escapeHtml(item.event)}</h3><p>${escapeHtml(item.category)} - ${escapeHtml(item.location)}</p><p>${escapeHtml(item.description)}</p></div>
         <div class="opportunity-meta"><strong>${escapeHtml(item.ngo)}</strong><br>${formatDate(item.date)}</div>
         <div><span class="tag ${item.status}">${escapeHtml(item.status)}</span><p>${item.seats} seats</p></div>
         <div class="row-actions">${action}</div>
@@ -864,7 +887,7 @@ function opportunityPayload(form, user) {
     adminId: user.id,
     event: data.get("eventName").trim(),
     ngo: data.get("ngoName").trim(),
-    description: `${data.get("eventCategory")} volunteer programme.`,
+    description: `${data.get("eventCategory")} volunteer program.`,
     date: data.get("eventDate"),
     seats: Number(data.get("eventSeats")),
     location: data.get("eventLocation").trim(),
@@ -959,14 +982,34 @@ function setupOpportunityPage() {
 function renderActivityOptions() {
   const user = currentUser();
   const select = document.querySelector("#activityName");
+  const note = document.querySelector("#hoursEligibilityNote");
   if (!user || !select) return;
-  const opportunities = state.applications
-    .filter(item => item.studentId === user.id && item.status !== "rejected")
+  const studentApplications = state.applications.filter(item => item.studentId === user.id);
+  const approvedApplications = studentApplications.filter(item => item.status === "approved");
+  const blockedApplications = studentApplications.filter(item => item.status === "pending" || item.status === "rejected");
+  const opportunities = approvedApplications
     .map(application => state.opportunities.find(item => item.id === application.opportunityId))
     .filter(Boolean);
   select.innerHTML = opportunities.length
-    ? `<option value="">Select activity</option>${opportunities.map(item => `<option value="${item.id}">${escapeHtml(item.event)}</option>`).join("")}`
-    : `<option value="">Apply for an opportunity first</option>`;
+    ? `<option value="">Select approved activity</option>${opportunities.map(item => `<option value="${item.id}">${escapeHtml(item.event)}</option>`).join("")}`
+    : `<option value="">No approved opportunities yet</option>`;
+  select.disabled = !opportunities.length;
+  if (note) {
+    if (opportunities.length && blockedApplications.length) {
+      note.textContent = `${opportunities.length} approved application${opportunities.length === 1 ? "" : "s"} available. Pending or rejected applications cannot enter hours.`;
+    } else if (opportunities.length) {
+      note.textContent = "Choose an approved application, then enter your completed volunteer hours.";
+    } else if (blockedApplications.length) {
+      note.textContent = "Your applications are still pending or rejected. Wait for admin approval before entering hours.";
+    } else {
+      note.textContent = "Apply for an opportunity first. After admin approval, you can enter volunteer hours here.";
+    }
+  }
+
+  const form = document.querySelector("#hoursForm");
+  form?.querySelectorAll("input, textarea, button[type='submit']").forEach(element => {
+    element.disabled = !opportunities.length;
+  });
 }
 
 function renderHours() {
@@ -1011,7 +1054,11 @@ function setupHoursPage() {
     const opportunityId = Number(document.querySelector("#activityName").value);
     const opportunity = state.opportunities.find(item => item.id === opportunityId);
     if (!opportunity) {
-      showToast("Select an activity from your applications.");
+      showToast("Select an approved activity first.");
+      return;
+    }
+    if (!approvedApplicationFor(user.id, opportunityId)) {
+      showToast("Your application must be approved by admin before entering hours.");
       return;
     }
     try {
@@ -1076,7 +1123,7 @@ function exportLeaderboard() {
   const csv = rows.map(row => row.map(value => `"${String(value).replaceAll('"', '""')}"`).join(",")).join("\r\n");
   const link = document.createElement("a");
   link.href = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
-  link.download = `e-sukarelawan-leaderboard-${new Date().toISOString().slice(0, 10)}.csv`;
+  link.download = `e-volunteer-leaderboard-${new Date().toISOString().slice(0, 10)}.csv`;
   link.click();
   URL.revokeObjectURL(link.href);
 }
@@ -1137,7 +1184,7 @@ function setupAuthPages() {
       } else {
         sessionStorage.removeItem(UNIVERSITY_SESSION_KEY);
       }
-      go("dashboard.html");
+      go("dashboard.jsp");
     } catch (error) {
       showToast(error.message);
     }
@@ -1167,7 +1214,7 @@ function setupAuthPages() {
 
     try {
       await dataSource.register(payload);
-      go("dashboard.html");
+      go("dashboard.jsp");
     } catch (error) {
       showToast(error.message);
     }
@@ -1182,16 +1229,16 @@ function renderShell() {
   const university = universityForUser(user);
 
   const links = [
-    ["dashboard", "dashboard.html", "🏠", "Dashboard"],
-    ["opportunities", "opportunities.html", "🤝", "Volunteer opportunities"],
-    ["hours", "hours.html", "⏱️", "Volunteer hours"],
-    ["leaderboard", "leaderboard.html", "🏆", "Leaderboard"]
+    ["dashboard", "dashboard.jsp", "\uD83C\uDFE0", "Dashboard"],
+    ["opportunities", "opportunities.jsp", "\uD83E\uDD1D", "Volunteer opportunities"],
+    ["hours", "hours.jsp", "\u23F1\uFE0F", "Volunteer hours"],
+    ["leaderboard", "leaderboard.jsp", "\uD83C\uDFC6", "Leaderboard"]
   ];
 
   sidebar.innerHTML = `
     <div class="side-brand">
       <span class="brand-mark"></span>
-      <div><strong>E-Sukarelawan</strong><span>Sukarelawan, Masyarakat Berdaya</span></div>
+      <div><strong>E-Volunteer</strong><span>Volunteers, Empowered Communities</span></div>
     </div>
     <nav class="side-nav">
       ${links.map(([page, href, icon, label]) => `
@@ -1213,14 +1260,14 @@ function renderShell() {
   `;
 
   topbar.innerHTML = `
-    <div class="system-state">${dataSource.mode === "api" ? "Server connected" : "Demo mode"}</div>
+    <div class="system-state">${connectionLabel()}</div>
     <button class="bell-btn theme-toggle" type="button" id="themeToggleBtn" aria-label="Switch to dark theme" aria-pressed="false">
       <span class="theme-glyph">D</span><span class="theme-dot"></span>
     </button>
     <div class="top-profile">
       <div class="avatar">${initials(user.fullName)}</div>
       <div class="profile-copy"><strong>${escapeHtml(user.fullName)}</strong><span>${user.role === "admin" ? "Coordinator" : "Student"} - ${escapeHtml(university.code)}</span></div>
-      <span class="profile-caret">⌄</span>
+      <span class="profile-caret">v</span>
     </div>
     <button class="btn secondary logout-btn" type="button" id="logoutBtn">Logout</button>
   `;
@@ -1228,7 +1275,7 @@ function renderShell() {
   document.querySelector("#themeToggleBtn")?.addEventListener("click", toggleTheme);
   document.querySelector("#logoutBtn").addEventListener("click", async () => {
     await dataSource.logout();
-    go("login.html");
+    go("login.jsp");
   });
   setupSidebarToggle();
 }
@@ -1254,11 +1301,11 @@ function renderDashboard() {
   document.querySelector("#metricHours").textContent = formatHours(verifiedHours);
   document.querySelector("#metricEvents").textContent = activeEvents;
   document.querySelector("#metricPending").textContent = pendingHours;
-  document.querySelector("#metricRank").textContent = rank ? `#${rank}` : "—";
+  document.querySelector("#metricRank").textContent = rank ? `#${rank}` : "-";
 
   const metricSmall = document.querySelectorAll(".metric small");
   if (metricSmall[0]) metricSmall[0].textContent = "+12.5 this month";
-  if (metricSmall[1]) metricSmall[1].textContent = user.role === "student" ? "You're registered" : "Programmes active";
+  if (metricSmall[1]) metricSmall[1].textContent = user.role === "student" ? "You're registered" : "Programs active";
   if (metricSmall[2]) metricSmall[2].textContent = "Awaiting approval";
   if (metricSmall[3]) metricSmall[3].textContent = user.role === "student" ? "Top 5% this month" : "Verified contributors";
 
@@ -1270,11 +1317,11 @@ function renderDashboard() {
         <div class="event-thumb thumb-${categoryClass(item.category)}"></div>
         <div class="event-copy">
           <strong>${escapeHtml(item.event)}</strong>
-          <span class="event-meta">⌖ ${escapeHtml(item.location)}</span>
-          <span class="event-meta">▣ ${opportunityTime(item)}</span>
+          <span class="event-meta">Location: ${escapeHtml(item.location)}</span>
+          <span class="event-meta">Date: ${opportunityTime(item)}</span>
           <span class="tag ${item.category.toLowerCase().replace(/\s+/g, "-")}">${escapeHtml(item.category)}</span>
         </div>
-        <a class="btn primary event-btn" href="opportunities.html">View details</a>
+        <a class="btn primary event-btn" href="opportunities.jsp">View details</a>
       </article>
     `).join("") || `<div class="empty">No active opportunities.</div>`;
 
@@ -1359,18 +1406,18 @@ function renderShell() {
   const isStudent = user.role === "student";
 
   const links = [
-    ["dashboard", "dashboard.html", "🏠", "Dashboard"],
-    ["opportunities", "opportunities.html", "🤝", "Volunteer opportunities"],
-    ["hours", "hours.html", "⏱️", "Volunteer hours"],
-    ["leaderboard", "leaderboard.html", "🏆", "Leaderboard"],
-    ["feedback", "feedback.html", "💬", "Feedback"],
-    ["profile", "profile.html", "👤", "Profile"]
+    ["dashboard", "dashboard.jsp", "\uD83C\uDFE0", "Dashboard"],
+    ["opportunities", "opportunities.jsp", "\uD83E\uDD1D", "Volunteer opportunities"],
+    ["hours", "hours.jsp", "\u23F1\uFE0F", "Volunteer hours"],
+    ["leaderboard", "leaderboard.jsp", "\uD83C\uDFC6", "Leaderboard"],
+    ["feedback", "feedback.jsp", "\uD83D\uDCAC", "Feedback"],
+    ["profile", "profile.jsp", "\uD83D\uDC64", "Profile"]
   ];
 
   sidebar.innerHTML = `
     <div class="side-brand">
       <span class="brand-mark"></span>
-      <div><strong>E-Sukarelawan</strong><span>Sukarelawan, Masyarakat Berdaya</span></div>
+      <div><strong>E-Volunteer</strong><span>Volunteers, Empowered Communities</span></div>
     </div>
     <nav class="side-nav">
       ${links.map(([page, href, icon, label]) => `
@@ -1392,11 +1439,11 @@ function renderShell() {
   `;
 
   topbar.innerHTML = `
-    <div class="system-state">${dataSource.mode === "api" ? "Server connected" : "Demo mode"}</div>
+    <div class="system-state">${connectionLabel()}</div>
     <button class="bell-btn theme-toggle" type="button" id="themeToggleBtn" aria-label="Switch to dark theme" aria-pressed="false">
       <span class="theme-glyph">D</span><span class="theme-dot"></span>
     </button>
-    <a class="top-profile" href="profile.html" aria-label="Open profile page">
+    <a class="top-profile" href="profile.jsp" aria-label="Open profile page">
       ${avatarMarkup(user)}
       <div class="profile-copy"><strong>${escapeHtml(user.fullName)}</strong><span>${isStudent ? `Student - ${escapeHtml(university.code)}` : "Coordinator"}</span></div>
     </a>
@@ -1406,7 +1453,7 @@ function renderShell() {
   document.querySelector("#themeToggleBtn")?.addEventListener("click", toggleTheme);
   document.querySelector("#logoutBtn").addEventListener("click", async () => {
     await dataSource.logout();
-    go("login.html");
+    go("login.jsp");
   });
   setupSidebarToggle();
 }
@@ -1421,18 +1468,18 @@ function renderShell() {
   const isStudent = user.role === "student";
   const displayName = displayNameForUser(user);
   const links = [
-    ["dashboard", "dashboard.html", "🏠", "Dashboard"],
-    ["opportunities", "opportunities.html", "🤝", "Volunteer opportunities"],
-    ["hours", "hours.html", "⏱️", "Volunteer hours"],
-    ["leaderboard", "leaderboard.html", "🏆", "Leaderboard"],
-    ["feedback", "feedback.html", "💬", "Feedback"],
-    ["profile", "profile.html", "👤", "Profile"]
+    ["dashboard", "dashboard.jsp", "\uD83C\uDFE0", "Dashboard"],
+    ["opportunities", "opportunities.jsp", "\uD83E\uDD1D", "Volunteer opportunities"],
+    ["hours", "hours.jsp", "\u23F1\uFE0F", "Volunteer hours"],
+    ["leaderboard", "leaderboard.jsp", "\uD83C\uDFC6", "Leaderboard"],
+    ["feedback", "feedback.jsp", "\uD83D\uDCAC", "Feedback"],
+    ["profile", "profile.jsp", "\uD83D\uDC64", "Profile"]
   ];
 
   sidebar.innerHTML = `
     <div class="side-brand">
       <span class="brand-mark"></span>
-      <div><strong>E-Sukarelawan</strong><span>Sukarelawan, Masyarakat Berdaya</span></div>
+      <div><strong>E-Volunteer</strong><span>Volunteers, Empowered Communities</span></div>
     </div>
     <nav class="side-nav">
       ${links.map(([page, href, icon, label]) => `
@@ -1454,11 +1501,11 @@ function renderShell() {
   `;
 
   topbar.innerHTML = `
-    <div class="system-state">${dataSource.mode === "api" ? "Server connected" : "Demo mode"}</div>
+    <div class="system-state">${connectionLabel()}</div>
     <button class="bell-btn theme-toggle" type="button" id="themeToggleBtn" aria-label="Switch to dark theme" aria-pressed="false">
       <span class="theme-glyph">D</span><span class="theme-dot"></span>
     </button>
-    <a class="top-profile" href="profile.html" aria-label="Open profile page">
+    <a class="top-profile" href="profile.jsp" aria-label="Open profile page">
       ${avatarMarkup({ ...user, fullName: displayName })}
       <div class="profile-copy"><strong>${escapeHtml(displayName)}</strong><span>${isStudent ? `Student - ${escapeHtml(university.code)}` : "Coordinator"}</span></div>
     </a>
@@ -1468,7 +1515,7 @@ function renderShell() {
   document.querySelector("#themeToggleBtn")?.addEventListener("click", toggleTheme);
   document.querySelector("#logoutBtn").addEventListener("click", async () => {
     await dataSource.logout();
-    go("login.html");
+    go("login.jsp");
   });
   setupSidebarToggle();
 }
@@ -1781,7 +1828,7 @@ function renderDashboard() {
 
   const metricSmall = document.querySelectorAll(".metric small");
   if (metricSmall[0]) metricSmall[0].textContent = "+12.5 this month";
-  if (metricSmall[1]) metricSmall[1].textContent = user.role === "student" ? "You're registered" : "Programmes active";
+  if (metricSmall[1]) metricSmall[1].textContent = user.role === "student" ? "You're registered" : "Programs active";
   if (metricSmall[2]) metricSmall[2].textContent = "Awaiting approval";
   if (metricSmall[3]) metricSmall[3].textContent = user.role === "student" ? "Top 5% this month" : "Verified contributors";
 
@@ -1797,7 +1844,7 @@ function renderDashboard() {
           <span class="event-meta">[ ] ${opportunityTime(item)}</span>
           <span class="tag ${categoryClass(item.category)}">${escapeHtml(item.category)}</span>
         </div>
-        <a class="btn primary event-btn" href="opportunities.html">View details</a>
+        <a class="btn primary event-btn" href="opportunities.jsp">View details</a>
       </article>
     `).join("") || `<div class="empty">No active opportunities.</div>`;
 
@@ -1823,7 +1870,7 @@ function renderDashboard() {
         <article class="queue-row">
           <div class="queue-avatar">${initials(opportunity?.event || "EV")}</div>
           <div>
-            <strong>${escapeHtml(opportunity?.event || "Volunteer programme")}</strong>
+            <strong>${escapeHtml(opportunity?.event || "Volunteer program")}</strong>
             <span>${escapeHtml(opportunity?.location || "Location pending")}</span>
             <small>Applied on ${formatDate(application.applicationDate || new Date().toISOString().slice(0, 10))}</small>
           </div>
@@ -1920,12 +1967,12 @@ function openReviewModal(type, id) {
   modal.querySelector("#reviewModalType").textContent = isApplication ? "Applications" : "Hours";
   modal.querySelector("#reviewModalTitle").textContent = isApplication ? "Application review" : "Volunteer hours review";
   modal.querySelector("#reviewModalIntro").textContent = isApplication
-    ? "Review the student application before approving the programme seat."
+    ? "Review the student application before approving the program seat."
     : "Review the submitted service hours before updating the volunteer record.";
   modal.querySelector("#reviewDetails").innerHTML = isApplication
     ? [
         detailBlock("Student", applicant),
-        detailBlock("Programme", opportunity?.event || "Volunteer programme"),
+        detailBlock("Program", opportunity?.event || "Volunteer program"),
         detailBlock("Applied", formatDate(record.applicationDate || new Date().toISOString().slice(0, 10))),
         detailBlock("Location", opportunity?.location || "Location pending"),
         detailBlock("Category", opportunity?.category || "Activity"),
@@ -1933,11 +1980,11 @@ function openReviewModal(type, id) {
       ].join("")
     : [
         detailBlock("Student", applicant),
-        detailBlock("Programme", record.activity || opportunity?.event || "Volunteer programme"),
+        detailBlock("Program", record.activity || opportunity?.event || "Volunteer program"),
         detailBlock("Submitted note", record.note || "Pending review"),
         detailBlock("Hours", `${formatHours(record.amount)} hrs`),
         detailBlock("Status", record.status),
-        detailBlock("Programme date", opportunity?.date ? formatDate(opportunity.date) : "Date pending")
+        detailBlock("Program date", opportunity?.date ? formatDate(opportunity.date) : "Date pending")
       ].join("");
 
   modal.classList.remove("hidden");
